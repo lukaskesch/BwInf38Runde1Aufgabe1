@@ -100,6 +100,8 @@ namespace BwInfAufgabe1
 
             for (int i = 0; i < Farbpaare.GetLength(0); i++)
             {
+                //Es wird geschaut ob die Farbe aus dem Farbpaare Array (Spalte 1) schon im FarbnummernUndHaeufigkeit Array ist, wenn nicht wird diese hinzugefügt.
+                //Außerdem wird der Zähler für die Farbe um eins erhöht
                 int Index = GetIndexOfElementInArray(FarbnummernUndHaeufigkeit, Farbpaare[i, 0]);
                 if (-1 == Index)
                 {
@@ -111,6 +113,8 @@ namespace BwInfAufgabe1
                 {
                     FarbnummernUndHaeufigkeit[Index, 1]++;
                 }
+
+                //Gleiche wie oben nur diesmal Spalte 2 des Farbpaar Arrays
                 Index = GetIndexOfElementInArray(FarbnummernUndHaeufigkeit, Farbpaare[i, 1]);
                 if (-1 == Index)
                 {
@@ -175,6 +179,7 @@ namespace BwInfAufgabe1
 
         private void Ausgabe(int[,] Array1, int[,] Array2)
         {
+            //Diese Methode gibt alle Werte der beiden Arrays aus
             string Ausgabe1 = string.Empty;
             for(int i = 0; i< Array1.GetLength(0); i++)
             {
