@@ -29,7 +29,7 @@ namespace BwInfAufgabe1
         private void ButtonCalculate_Click(object sender, RoutedEventArgs e)
         {
             string[] EingabeArray;
-            int[] Farbnummern;
+            int[,] FarbnummernUndHaeufigkeit = new int[9,2];
             int[,] Farbpaare;
             string EingabeString;
             int[,] Blumenbeet = CreateBlumenbeet();
@@ -41,7 +41,7 @@ namespace BwInfAufgabe1
                 EingabeArray = Regex.Split(EingabeString, "\r\n");
 
                 Farbpaare = GetAllFarbpaare(EingabeArray);
-                Farbnummern = GetAllFarbnummern(Farbpaare);
+                GetAllFarbnummern(Farbpaare, FarbnummernUndHaeufigkeit);
             }
             catch
             {
@@ -49,7 +49,7 @@ namespace BwInfAufgabe1
                 return;
             }
 
-            
+            Ausgabe(Farbpaare, FarbnummernUndHaeufigkeit);
         }
 
         private int[,] CreateBlumenbeet()
@@ -94,46 +94,59 @@ namespace BwInfAufgabe1
             return Farbpaare;
         }
 
-        private int[] GetAllFarbnummern(int[,] Farbpaare)
+        private void GetAllFarbnummern(int[,] Farbpaare, int[,] FarbnummernUndHaeufigkeit)
         {
             //Diese Methode nimmt alle Farbpaare entgegen und ermittelt alle genutzen Farben und gibt diese in einem Array aus
-            int[] Farbnummern = new int[9];
 
             for (int i = 0; i < Farbpaare.GetLength(0); i++)
             {
-                if(!CheckIfElementInArray(Farbpaare[i,0], Farbnummern))
+                int Index = GetIndexOfElementInArray(FarbnummernUndHaeufigkeit, Farbpaare[i, 0]);
+                if (-1 == Index)
                 {
-                    Farbnummern[GetFirstFreeIndex(Farbnummern)] = Farbpaare[i, 0];
+                    Index = GetFirstFreeIndex(FarbnummernUndHaeufigkeit);
+                    FarbnummernUndHaeufigkeit[Index, 0] = Farbpaare[i, 0];
+                    FarbnummernUndHaeufigkeit[Index, 1] = 1;
                 }
-                if (!CheckIfElementInArray(Farbpaare[i, 1], Farbnummern))
+                else
                 {
-                    Farbnummern[GetFirstFreeIndex(Farbnummern)] = Farbpaare[i, 1];
+                    FarbnummernUndHaeufigkeit[Index, 1]++;
+                }
+                Index = GetIndexOfElementInArray(FarbnummernUndHaeufigkeit, Farbpaare[i, 1]);
+                if (-1 == Index)
+                {
+                    Index = GetFirstFreeIndex(FarbnummernUndHaeufigkeit);
+                    FarbnummernUndHaeufigkeit[Index, 0] = Farbpaare[i, 1];
+                    FarbnummernUndHaeufigkeit[Index, 1] = 1;
+                }
+                else
+                {
+                    FarbnummernUndHaeufigkeit[Index, 1]++;
                 }
             }
-            return Farbnummern;
+            
         }
 
-        private int GetFirstFreeIndex(int[] Array)
+        private int GetIndexOfElementInArray(int[,] Array, int Element)
+        {
+            //Diese Metode überprügt ob das übergebene Element im Array ist
+            for (int i = 0; i < Array.GetLength(0); i++)
+            {
+                if (Array[i,0] == Element) { return i; }
+            }
+            return -1;
+        }
+
+        private int GetFirstFreeIndex(int[,] Array)
         {
             //Diese Methode gibt den ersten freien Index eines Arrays zurück
-            for (int i = 0; i < Array.Length; i++)
+            for (int i = 0; i < Array.GetLength(0); i++)
             {
-                if (Array[i] == 0)
+                if (Array[i,0] == 0)
                 {
                     return i;
                 }
             }
             return -1;
-        }
-
-        private bool CheckIfElementInArray (int Element, int[] Array)
-        {
-            //Diese Metode überprügt ob das übergebene Element im Array ist
-            for(int i = 0; i < Array.Length; i++)
-            {
-                if(Array[i] == Element) { return true; }
-            }
-            return false;
         }
 
         private int BlumenNameToBlumenNummer(string Blumenname)
@@ -158,6 +171,32 @@ namespace BwInfAufgabe1
                 default:
                     return 0;
             }
+        }
+
+        private void Ausgabe(int[,] Array1, int[,] Array2)
+        {
+            string Ausgabe1 = string.Empty;
+            for(int i = 0; i< Array1.GetLength(0); i++)
+            {
+                for(int j = 0; j < Array1.GetLength(1); j++)
+                {
+                    Ausgabe1 += Array1[i, j] + " ";
+                }
+                Ausgabe1 += "\n";
+            }
+
+            string Ausgabe2 = string.Empty;
+            for (int i = 0; i < Array2.GetLength(0); i++)
+            {
+                for (int j = 0; j < Array2.GetLength(1); j++)
+                {
+                    Ausgabe2 += Array2[i, j] + " ";
+                }
+                Ausgabe2 += "\n";
+            }
+
+            MessageBox.Show(Ausgabe1);
+            MessageBox.Show(Ausgabe2);
         }
     }
 }
