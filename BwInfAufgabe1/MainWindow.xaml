@@ -17,7 +17,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <TextBox Name="TextBoxInput" Grid.Row="0" Margin="10 5"/>
-            <Button Name="ButtonCalculate" Content="Berechnen" Grid.Row="1" Margin="30 15"/>
+            <Button Name="ButtonCalculate" Content="Berechnen" Click="ButtonCalculate_Click" Grid.Row="1" Margin="30 15" />
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
