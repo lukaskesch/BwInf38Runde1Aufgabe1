@@ -16,7 +16,7 @@
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBox Name="TextBoxInput" Grid.Row="0" Margin="10 5"/>
+            <TextBox Name="TextBoxInput" Grid.Row="0" Margin="10 5" AcceptsReturn="True"/>
             <Button Name="ButtonCalculate" Content="Berechnen" Click="ButtonCalculate_Click" Grid.Row="1" Margin="30 15" />
         </Grid>
         <Grid Grid.Column="1">
@@ -27,6 +27,52 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TabPanel Name="TabPanel1" Background="Aqua" Grid.Column="1" Margin="10"></TabPanel>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <TabPanel Name="TabPanel2" Background="Aqua" Grid.Column="1" Margin="10"></TabPanel>
+                <TabPanel Name="TabPanel3" Background="Aqua" Grid.Column="2" Margin="10"></TabPanel>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TabPanel Name="TabPanel4" Background="Aqua" Grid.Column="0" Margin="10"></TabPanel>
+                <TabPanel Name="TabPanel5" Background="Aqua" Grid.Column="1" Margin="10"></TabPanel>
+                <TabPanel Name="TabPanel6" Background="Aqua" Grid.Column="2" Margin="10"></TabPanel>
+            </Grid>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <TabPanel Name="TabPanel7" Background="Aqua" Grid.Column="1" Margin="10"></TabPanel>
+                <TabPanel Name="TabPanel8" Background="Aqua" Grid.Column="2" Margin="10"></TabPanel>
+            </Grid>
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TabPanel Name="TabPanel9" Background="Aqua" Grid.Column="1" Margin="10"></TabPanel>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

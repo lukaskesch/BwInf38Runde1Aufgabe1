@@ -94,5 +94,13 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Blumen.txt" />
+    <Resource Include="Blumen1.txt" />
+    <Resource Include="Blumen2.txt" />
+    <Resource Include="Blumen3.txt" />
+    <Resource Include="Blumen4.txt" />
+    <Resource Include="Blumen5.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
