@@ -28,10 +28,11 @@ namespace BwInfAufgabe1
 
         private void ButtonCalculate_Click(object sender, RoutedEventArgs e)
         {
-            string[] EingabeArray;
-            int[,] FarbnummernUndHaeufigkeit = new int[9,2];
-            int[,] Farbpaare;
             string EingabeString;
+            string[] EingabeArray;
+            int AnzahlFarben;
+            int[,] FarbnummernUndHaeufigkeit = new int[7,2];
+            int[,] Farbpaare;
             int[,] Blumenbeet = CreateBlumenbeet();
 
             
@@ -40,6 +41,7 @@ namespace BwInfAufgabe1
                 EingabeString = TextBoxInput.Text;
                 EingabeArray = Regex.Split(EingabeString, "\r\n");
 
+                AnzahlFarben = int.Parse(EingabeArray[0]);
                 Farbpaare = GetAllFarbpaare(EingabeArray);
                 GetAllFarbnummern(Farbpaare, FarbnummernUndHaeufigkeit);
             }
