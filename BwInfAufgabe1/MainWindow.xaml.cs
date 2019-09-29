@@ -33,7 +33,12 @@ namespace BwInfAufgabe1
             string[] EingabeArray;
             int AnzahlFarben;
             int DifferenzFarben;
-            int[,] Farben = new int[7,2];
+            int[,] Farben = new int[7, 3];
+            for(int i = 0; i < 7; i++)
+            {
+                Farben[i, 1] = -1;
+                Farben[i, 2] = -1;
+            }
             int[,] Farbpaare;
             int[,] Blumenbeet = CreateBlumenbeet();
 
@@ -49,6 +54,17 @@ namespace BwInfAufgabe1
                 //Farbpaar Array und Farben Array werden gefüllt
                 Farbpaare = GetAllFarbpaare(EingabeArray);
                 GetAllFarbnummern(Farbpaare, Farben);
+
+                //Ausnahme, es wurden mehr Farben in Farbpaaren angegeben als Farben insgesammt erwünscht
+                int FarbenZuViel = GetFirstFreeIndex(Farben) - int.Parse(EingabeArray[0]);
+
+                while (FarbenZuViel > 0)
+                {
+                    //Ermittle Farbe die am wertlosesten ist
+                    //Lösche alle Farbpaare mit ihr
+                }
+
+                MessageBox.Show("Farben zu viel: " + FarbenZuViel.ToString());
             }
             catch
             {
@@ -56,13 +72,27 @@ namespace BwInfAufgabe1
                 return;
             }
 
-            //Differenz zwischen Anzahl unterschiedliche Farben erwünscht und gennanten Farben
-            DifferenzFarben = AnzahlFarben - GetFirstFreeIndex(Farben);
-
-            if(DifferenzFarben != 0)
+            //Farbenarray mit Farben auffüllen, bis die Anzahl an erwünschten Farben erreicht ist
+            Ausgabe(Farbpaare, Farben, Blumenbeet);
+            if(GetFirstFreeIndex(Farben) != -1)
             {
-                FillFarben(DifferenzFarben, Farben);
+                DifferenzFarben = AnzahlFarben - GetFirstFreeIndex(Farben);
+                if (DifferenzFarben > 0)
+                {
+                    FillFarben(DifferenzFarben, Farben);
+                }
+                MessageBox.Show("Differenz Farben: " + DifferenzFarben.ToString());
             }
+
+            //Blumenbeet mit diesen Farben auffüllen
+            for (int i = 0; i < 7; i++)
+            {
+                if(Farben[i, 1] == 0)
+                {
+                    SetBlumeInBlumenbeet(ref Blumenbeet, GetLowestPointInBlumenbeet(ref Blumenbeet), Farben[i, 0]);
+                }
+            }
+            
             
             Ausgabe(Farbpaare, Farben, Blumenbeet);
         }
@@ -106,9 +136,9 @@ namespace BwInfAufgabe1
                 Farbpaare[i, 1] = BlumenNameToBlumenNummer(EingabeArrayRow[1]);
                 Farbpaare[i, 2] = int.Parse(EingabeArrayRow[2]);
             }
+            
             return Farbpaare;
         }
-
         private void GetAllFarbnummern(int[,] Farbpaare, int[,] FarbnummernUndHaeufigkeit)
         {
             //Diese Methode nimmt alle Farbpaare entgegen und ermittelt alle genutzen Farben und gibt diese in einem Array aus
@@ -123,10 +153,12 @@ namespace BwInfAufgabe1
                     Index = GetFirstFreeIndex(FarbnummernUndHaeufigkeit);
                     FarbnummernUndHaeufigkeit[Index, 0] = Farbpaare[i, 0];
                     FarbnummernUndHaeufigkeit[Index, 1] = 1;
+                    FarbnummernUndHaeufigkeit[Index, 2] = Farbpaare[i, 2];
                 }
                 else
                 {
                     FarbnummernUndHaeufigkeit[Index, 1]++;
+                    FarbnummernUndHaeufigkeit[Index, 2] += Farbpaare[i, 2];
                 }
 
                 //Gleiche wie oben nur diesmal Spalte 2 des Farbpaar Arrays
@@ -136,15 +168,16 @@ namespace BwInfAufgabe1
                     Index = GetFirstFreeIndex(FarbnummernUndHaeufigkeit);
                     FarbnummernUndHaeufigkeit[Index, 0] = Farbpaare[i, 1];
                     FarbnummernUndHaeufigkeit[Index, 1] = 1;
+                    FarbnummernUndHaeufigkeit[Index, 2] = Farbpaare[i, 2];
                 }
                 else
                 {
                     FarbnummernUndHaeufigkeit[Index, 1]++;
+                    FarbnummernUndHaeufigkeit[Index, 2] += Farbpaare[i, 2];
                 }
             }
             
         }
-
         private int GetIndexOfElementInArray(int[,] Array, int Element)
         {
             //Diese Metode überprügt ob das übergebene Element im Array ist
@@ -154,7 +187,6 @@ namespace BwInfAufgabe1
             }
             return -1;
         }
-
         private int GetFirstFreeIndex(int[,] Array)
         {
             //Diese Methode gibt den ersten freien Index eines Arrays zurück
@@ -167,7 +199,6 @@ namespace BwInfAufgabe1
             }
             return -1;
         }
-
         private int BlumenNameToBlumenNummer(string Blumenname)
         {
             //Diese Methode konvertiert den übergebenen Blumennamen in einen Blumencode
@@ -191,8 +222,6 @@ namespace BwInfAufgabe1
                     return 0;
             }
         }
-
-       
         private void FillFarben(int i, int[,] FarbnummernUndHaeufigkeit)
         {
             //Diese Methode füllt das Farben Array auf die gewünschte anzahl an Farben auf
@@ -204,12 +233,14 @@ namespace BwInfAufgabe1
                     {
                         return;
                     }
-                    FarbnummernUndHaeufigkeit[GetFirstFreeIndex(FarbnummernUndHaeufigkeit), 0] = Farbnummer;
+                    int index = GetFirstFreeIndex(FarbnummernUndHaeufigkeit);
+                    FarbnummernUndHaeufigkeit[index, 0] = Farbnummer;
+                    FarbnummernUndHaeufigkeit[index, 1] = 0;
+                    FarbnummernUndHaeufigkeit[index, 2] = 0;
                     i--;
                 }
             }
         }
-
         private Brush GetFarbeOfBlume(int Blumennummer)
         {
             switch (Blumennummer)
@@ -237,31 +268,31 @@ namespace BwInfAufgabe1
         {
             switch (Blumenplatz)
             {
-                case 1:
+                case 0:
                     TabPanel1.Background = GetFarbeOfBlume(Blumennummer);
                     break;
-                case 2:
+                case 1:
                     TabPanel2.Background = GetFarbeOfBlume(Blumennummer);
                     break;
-                case 3:
+                case 2:
                     TabPanel3.Background = GetFarbeOfBlume(Blumennummer);
                     break;
-                case 4:
+                case 3:
                     TabPanel4.Background = GetFarbeOfBlume(Blumennummer);
                     break;
-                case 5:
+                case 4:
                     TabPanel5.Background = GetFarbeOfBlume(Blumennummer);
                     break;
-                case 6:
+                case 5:
                     TabPanel6.Background = GetFarbeOfBlume(Blumennummer);
                     break;
-                case 7:
+                case 6:
                     TabPanel7.Background = GetFarbeOfBlume(Blumennummer);
                     break;
-                case 8:
+                case 7:
                     TabPanel8.Background = GetFarbeOfBlume(Blumennummer);
                     break;
-                case 9:
+                case 8:
                     TabPanel9.Background = GetFarbeOfBlume(Blumennummer);
                     break;
                 default:
@@ -291,10 +322,53 @@ namespace BwInfAufgabe1
                 Ausgabe2 += "\n";
             }
 
+            string Ausgabe3 = string.Empty;
+            for (int i = 0; i < Blumenbeet.GetLength(0); i++)
+            {
+                for (int j = 0; j < Blumenbeet.GetLength(1); j++)
+                {
+                    Ausgabe3 += Blumenbeet[i, j] + " ";
+                }
+                Ausgabe3 += "\n";
+            }
+
             MessageBox.Show(Ausgabe1);
             MessageBox.Show(Ausgabe2);
+            MessageBox.Show(Ausgabe3);
 
-            SetBlumeToFarbe(9, 6);
+            
+        }
+        private int GetLowestPointInBlumenbeet(ref int[,] Blumenbeet)
+        {
+            //Ermittelt die Anzahl an niedrigster Nachbarn an einem unbekannten Platz
+            int LowestNeighbours = 6;
+            for(int i = 0; i < 9; i++)
+            {
+                if(Blumenbeet[i,0] == -1)
+                {
+                    if(Blumenbeet[i,1] < LowestNeighbours)
+                    {
+                        LowestNeighbours = Blumenbeet[i, 1];
+                    }
+                }
+            }
+
+            //Ermittelt den dazugehörigen Platz und gibt diesen zurück
+            int index = 0;
+            for(int i = 0; i < 9; i++)
+            {
+                if(Blumenbeet[i,1] == LowestNeighbours && Blumenbeet[i,0] == -1)
+                {
+                    return index;
+                }
+                index++;
+            }
+            return -1;
+        }
+        private void SetBlumeInBlumenbeet(ref int[,] Blumenbeet, int Platz, int Blume)
+        {
+            Blumenbeet[Platz, 0] = Blume;
+            SetBlumeToFarbe(Platz, Blume);
         }
     }
 }

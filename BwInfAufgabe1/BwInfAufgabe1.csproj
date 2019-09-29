@@ -102,5 +102,8 @@
     <Resource Include="Blumen4.txt" />
     <Resource Include="Blumen5.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AlleBlumen.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
