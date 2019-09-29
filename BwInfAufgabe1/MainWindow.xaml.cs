@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Drawing;
 
 namespace BwInfAufgabe1
 {
@@ -31,7 +32,8 @@ namespace BwInfAufgabe1
             string EingabeString;
             string[] EingabeArray;
             int AnzahlFarben;
-            int[,] FarbnummernUndHaeufigkeit = new int[7,2];
+            int DifferenzFarben;
+            int[,] Farben = new int[7,2];
             int[,] Farbpaare;
             int[,] Blumenbeet = CreateBlumenbeet();
 
@@ -41,9 +43,12 @@ namespace BwInfAufgabe1
                 EingabeString = TextBoxInput.Text;
                 EingabeArray = Regex.Split(EingabeString, "\r\n");
 
+                //Es wird ermittelt, wie viele unterschiedliche Farben erwünscht sind
                 AnzahlFarben = int.Parse(EingabeArray[0]);
+
+                //Farbpaar Array und Farben Array werden gefüllt
                 Farbpaare = GetAllFarbpaare(EingabeArray);
-                GetAllFarbnummern(Farbpaare, FarbnummernUndHaeufigkeit);
+                GetAllFarbnummern(Farbpaare, Farben);
             }
             catch
             {
@@ -51,7 +56,15 @@ namespace BwInfAufgabe1
                 return;
             }
 
-            Ausgabe(Farbpaare, FarbnummernUndHaeufigkeit);
+            //Differenz zwischen Anzahl unterschiedliche Farben erwünscht und gennanten Farben
+            DifferenzFarben = AnzahlFarben - GetFirstFreeIndex(Farben);
+
+            if(DifferenzFarben != 0)
+            {
+                FillFarben(DifferenzFarben, Farben);
+            }
+            
+            Ausgabe(Farbpaare, Farben, Blumenbeet);
         }
 
         private int[,] CreateBlumenbeet()
@@ -102,7 +115,7 @@ namespace BwInfAufgabe1
 
             for (int i = 0; i < Farbpaare.GetLength(0); i++)
             {
-                //Es wird geschaut ob die Farbe aus dem Farbpaare Array (Spalte 1) schon im FarbnummernUndHaeufigkeit Array ist, wenn nicht wird diese hinzugefügt.
+                //Es wird geschaut ob die Farbe aus dem Farbpaare Array (Spalte 1) schon im Farben Array ist, wenn nicht wird diese hinzugefügt.
                 //Außerdem wird der Zähler für die Farbe um eins erhöht
                 int Index = GetIndexOfElementInArray(FarbnummernUndHaeufigkeit, Farbpaare[i, 0]);
                 if (-1 == Index)
@@ -179,7 +192,83 @@ namespace BwInfAufgabe1
             }
         }
 
-        private void Ausgabe(int[,] Array1, int[,] Array2)
+       
+        private void FillFarben(int i, int[,] FarbnummernUndHaeufigkeit)
+        {
+            //Diese Methode füllt das Farben Array auf die gewünschte anzahl an Farben auf
+            for (int Farbnummer = 1; Farbnummer <= 9; Farbnummer++)
+            {
+                if (GetIndexOfElementInArray(FarbnummernUndHaeufigkeit, Farbnummer) == -1)
+                {
+                    if (i == 0)
+                    {
+                        return;
+                    }
+                    FarbnummernUndHaeufigkeit[GetFirstFreeIndex(FarbnummernUndHaeufigkeit), 0] = Farbnummer;
+                    i--;
+                }
+            }
+        }
+
+        private Brush GetFarbeOfBlume(int Blumennummer)
+        {
+            switch (Blumennummer)
+            {
+                case 1:
+                    return new SolidColorBrush(Color.FromRgb(0, 0, 255));
+                case 2:
+                    return new SolidColorBrush(Color.FromRgb(255, 255, 0));
+                case 3:
+                    return new SolidColorBrush(Color.FromRgb(0, 255, 0));
+                case 4:
+                    return new SolidColorBrush(Color.FromRgb(255, 165, 0));
+                case 5:
+                    return new SolidColorBrush(Color.FromRgb(255, 192, 203));
+                case 6:
+                    return new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                case 7:
+                    return new SolidColorBrush(Color.FromRgb(63, 136, 143));
+                default:
+                    return new SolidColorBrush(Color.FromRgb(255, 255, 255));
+
+            }
+        }
+        private void SetBlumeToFarbe(int Blumenplatz, int Blumennummer)
+        {
+            switch (Blumenplatz)
+            {
+                case 1:
+                    TabPanel1.Background = GetFarbeOfBlume(Blumennummer);
+                    break;
+                case 2:
+                    TabPanel2.Background = GetFarbeOfBlume(Blumennummer);
+                    break;
+                case 3:
+                    TabPanel3.Background = GetFarbeOfBlume(Blumennummer);
+                    break;
+                case 4:
+                    TabPanel4.Background = GetFarbeOfBlume(Blumennummer);
+                    break;
+                case 5:
+                    TabPanel5.Background = GetFarbeOfBlume(Blumennummer);
+                    break;
+                case 6:
+                    TabPanel6.Background = GetFarbeOfBlume(Blumennummer);
+                    break;
+                case 7:
+                    TabPanel7.Background = GetFarbeOfBlume(Blumennummer);
+                    break;
+                case 8:
+                    TabPanel8.Background = GetFarbeOfBlume(Blumennummer);
+                    break;
+                case 9:
+                    TabPanel9.Background = GetFarbeOfBlume(Blumennummer);
+                    break;
+                default:
+                    break;
+            }
+        }
+        private void Ausgabe(int[,] Array1, int[,] Array2, int[,] Blumenbeet)
         {
             //Diese Methode gibt alle Werte der beiden Arrays aus
             string Ausgabe1 = string.Empty;
@@ -204,6 +293,8 @@ namespace BwInfAufgabe1
 
             MessageBox.Show(Ausgabe1);
             MessageBox.Show(Ausgabe2);
+
+            SetBlumeToFarbe(9, 6);
         }
     }
 }
