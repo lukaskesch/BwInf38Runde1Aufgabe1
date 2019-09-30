@@ -33,7 +33,7 @@ namespace BwInfAufgabe1
             string[] EingabeArray;
             int AnzahlFarben;
             int DifferenzFarben;
-            int[,] Farben = new int[7, 3];
+            int[,] Farben = new int[7, 9];
             for(int i = 0; i < 7; i++)
             {
                 Farben[i, 1] = -1;
@@ -196,11 +196,17 @@ namespace BwInfAufgabe1
                     FarbnummernUndHaeufigkeit[Index, 0] = Farbpaare[i, 0];
                     FarbnummernUndHaeufigkeit[Index, 1] = 1;
                     FarbnummernUndHaeufigkeit[Index, 2] = Farbpaare[i, 2];
+
+                    SetNachbarblumen(FarbnummernUndHaeufigkeit, Index, Farbpaare[i, 0], Farbpaare[i, 1]);
+                    
+
                 }
                 else
                 {
                     FarbnummernUndHaeufigkeit[Index, 1]++;
                     FarbnummernUndHaeufigkeit[Index, 2] += Farbpaare[i, 2];
+                    SetNachbarblumen(FarbnummernUndHaeufigkeit, Index, Farbpaare[i, 0], Farbpaare[i, 1]);
+
                 }
 
                 //Gleiche wie oben nur diesmal Spalte 2 des Farbpaar Arrays
@@ -211,14 +217,29 @@ namespace BwInfAufgabe1
                     FarbnummernUndHaeufigkeit[Index, 0] = Farbpaare[i, 1];
                     FarbnummernUndHaeufigkeit[Index, 1] = 1;
                     FarbnummernUndHaeufigkeit[Index, 2] = Farbpaare[i, 2];
+                    SetNachbarblumen(FarbnummernUndHaeufigkeit, Index, Farbpaare[i, 0], Farbpaare[i, 1]);
+
                 }
                 else
                 {
                     FarbnummernUndHaeufigkeit[Index, 1]++;
                     FarbnummernUndHaeufigkeit[Index, 2] += Farbpaare[i, 2];
+                    SetNachbarblumen(FarbnummernUndHaeufigkeit, Index, Farbpaare[i, 0], Farbpaare[i, 1]);
+
                 }
             }
             
+        }
+        private void SetNachbarblumen(int[,] Farben, int index,  int Farbe1, int Farbe2)
+        {
+            if(Farben[index,0] != Farbe1)
+            {
+                Farben[index, GetFirstFreeIndexOfRow(Farben, index)] = Farbe1;
+            }
+            if (Farben[index, 0] != Farbe2)
+            {
+                Farben[index, GetFirstFreeIndexOfRow(Farben, index)] = Farbe2;
+            }
         }
         private int GetIndexOfElementInArray(int[,] Array, int Element)
         {
@@ -235,6 +256,17 @@ namespace BwInfAufgabe1
             for (int i = 0; i < Array.GetLength(0); i++)
             {
                 if (Array[i,0] == 0)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        private int GetFirstFreeIndexOfRow(int[,] Array, int Row)
+        {
+            for(int i = 0; i < Array.GetLength(1); i++)
+            {
+                if(Array[Row, i] == 0)
                 {
                     return i;
                 }
