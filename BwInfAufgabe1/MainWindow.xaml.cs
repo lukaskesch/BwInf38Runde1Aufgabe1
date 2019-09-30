@@ -89,11 +89,13 @@ namespace BwInfAufgabe1
             {
                 if(Farben[i, 1] == 0)
                 {
-                    SetBlumeInBlumenbeet(ref Blumenbeet, GetLowestPointInBlumenbeet(ref Blumenbeet), Farben[i, 0]);
+                    SetBlumeInBlumenbeet(Blumenbeet, GetLowestPointInBlumenbeet(Blumenbeet), Farben[i, 0]);
                 }
             }
-            
-            
+
+            //Blume, die in den meisten Farbpaaren enthalten ist, in die Mitte
+            SetMiddelBlume(Farben, Blumenbeet);
+
             Ausgabe(Farbpaare, Farben, Blumenbeet);
         }
 
@@ -412,7 +414,7 @@ namespace BwInfAufgabe1
 
             
         }
-        private int GetLowestPointInBlumenbeet(ref int[,] Blumenbeet)
+        private int GetLowestPointInBlumenbeet(int[,] Blumenbeet)
         {
             //Ermittelt die Anzahl an niedrigster Nachbarn an einem unbekannten Platz
             int LowestNeighbours = 6;
@@ -439,10 +441,38 @@ namespace BwInfAufgabe1
             }
             return -1;
         }
-        private void SetBlumeInBlumenbeet(ref int[,] Blumenbeet, int Platz, int Blume)
+        private void SetBlumeInBlumenbeet(int[,] Blumenbeet, int Platz, int Blume)
         {
             Blumenbeet[Platz, 0] = Blume;
             SetBlumeToFarbe(Platz, Blume);
+        }
+        private void SetMiddelBlume(int[,] Farben, int[,] Blumenbeet)
+        {
+            int MeistenPartner = 0;
+            int MeistenPartnerFarbnummer = -1;
+            int MeistenPartnerIndex = 0;
+
+            //Ermittelt die Farbe mit den meisten Farbkombinationen
+            for(int i = 0; i < 7; i++)
+            {
+                if(MeistenPartner < Farben[i, 1])
+                {
+                    MeistenPartner = Farben[i, 1];
+                    MeistenPartnerFarbnummer = Farben[i, 0];
+                    MeistenPartnerIndex = i;
+                }
+                else if (MeistenPartner == Farben[i, 1])
+                {
+                    if (Farben[MeistenPartnerIndex, 2] < Farben[i, 2])
+                    {
+                        MeistenPartner = Farben[i, 1];
+                        MeistenPartnerFarbnummer = Farben[i, 0];
+                        MeistenPartnerIndex = i;
+                    }
+                }
+            }
+
+            SetBlumeInBlumenbeet(Blumenbeet, 4, MeistenPartnerFarbnummer);
         }
     }
 }
