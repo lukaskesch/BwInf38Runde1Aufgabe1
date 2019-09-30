@@ -102,7 +102,7 @@ namespace BwInfAufgabe1
             //Array für das Blumenbeet
             //Erste Spalte speichert den Nummerncode der Blumenfarbe und der Index gibt an welchem Steckplatz 
             //Zweite Spalte ist wie viele Nebenblumen ein Steckplatz hat
-            int[,] Blumenbeet = new int[9, 2];
+            int[,] Blumenbeet = new int[9, 8];
 
             //Belegt jeden Index der Blumennummer spalte mit einer Prüfziffer
             for (int i = 0; i < 9; i++)
@@ -121,6 +121,48 @@ namespace BwInfAufgabe1
             Blumenbeet[7, 1] = 4;
             Blumenbeet[8, 1] = 2;
 
+
+            //Definiert, welche Nachbaar Blumenplätze jeder Blumenplatz hat
+            Blumenbeet[0, 2] = 1;
+            Blumenbeet[0, 3] = 2;
+
+            Blumenbeet[1, 2] = 0;
+            Blumenbeet[1, 3] = 2;
+            Blumenbeet[1, 4] = 3;
+            Blumenbeet[1, 5] = 4;
+
+            Blumenbeet[2, 2] = 0;
+            Blumenbeet[2, 3] = 1;
+            Blumenbeet[2, 4] = 4;
+            Blumenbeet[2, 5] = 5;
+
+            Blumenbeet[3, 2] = 1;
+            Blumenbeet[3, 3] = 4;
+            Blumenbeet[3, 4] = 6;
+
+            Blumenbeet[4, 2] = 1;
+            Blumenbeet[4, 3] = 2;
+            Blumenbeet[4, 4] = 3;
+            Blumenbeet[4, 5] = 5;
+            Blumenbeet[4, 6] = 6;
+            Blumenbeet[4, 7] = 7;
+
+            Blumenbeet[5, 2] = 2;
+            Blumenbeet[5, 3] = 4;
+            Blumenbeet[5, 4] = 7;
+
+            Blumenbeet[6, 2] = 3;
+            Blumenbeet[6, 3] = 4;
+            Blumenbeet[6, 4] = 7;
+            Blumenbeet[6, 5] = 8;
+
+            Blumenbeet[7, 2] = 4;
+            Blumenbeet[7, 3] = 5;
+            Blumenbeet[7, 4] = 6;
+            Blumenbeet[7, 5] = 8;
+
+            Blumenbeet[8, 2] = 6;
+            Blumenbeet[8, 3] = 7;
 
             return Blumenbeet;
         }
