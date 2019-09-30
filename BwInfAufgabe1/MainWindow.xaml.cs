@@ -61,7 +61,13 @@ namespace BwInfAufgabe1
                 while (FarbenZuViel > 0)
                 {
                     //Ermittle Farbe die am wertlosesten ist
+                    int index = GetFarbeWithLowestPoints(Farben);
+                    MessageBox.Show(index.ToString());
+
                     //Lösche alle Farbpaare mit ihr
+
+
+                    FarbenZuViel--;
                 }
 
                 MessageBox.Show("Farben zu viel: " + FarbenZuViel.ToString());
@@ -231,6 +237,31 @@ namespace BwInfAufgabe1
                 }
             }
             
+        }
+        private int GetFarbeWithLowestPoints(int[,] Farben)
+        {
+            int WenigstenPunkte = 6;
+            int WenigstenPunkteIndex = 0;
+
+            //Ermittelt die Farbe mit den wenigsten Farbkombinationen
+            for (int i = 0; i < 7; i++)
+            {
+                if (WenigstenPunkte > Farben[i, 2])
+                {
+                    WenigstenPunkte = Farben[i, 2];
+                    WenigstenPunkteIndex = i;
+                }
+                //Wenn zwei Blumen den gleichen Wert haben, wird die ausgewählt, die in mehr Farbpaaren vorkommt
+                else if (WenigstenPunkte == Farben[i, 2])
+                {
+                    if (Farben[WenigstenPunkteIndex, 1] < Farben[i, 1])
+                    {
+                        WenigstenPunkte = Farben[i, 1];
+                        WenigstenPunkteIndex = i;
+                    }
+                }
+            }
+            return WenigstenPunkteIndex;
         }
         private void SetNachbarblumen(int[,] Farben, int index,  int Farbe1, int Farbe2)
         {
@@ -461,6 +492,7 @@ namespace BwInfAufgabe1
                     MeistenPartnerFarbnummer = Farben[i, 0];
                     MeistenPartnerIndex = i;
                 }
+                //Wenn zwei Blumen gleich viele Partner haben, wird geschaut welche Blume mehr Punkte ergibt
                 else if (MeistenPartner == Farben[i, 1])
                 {
                     if (Farben[MeistenPartnerIndex, 2] < Farben[i, 2])
