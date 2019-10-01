@@ -13,11 +13,13 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="3*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <TextBox Name="TextBoxInput" Grid.Row="0" Margin="10 5" AcceptsReturn="True"/>
-            <Button Name="ButtonCalculate" Content="Berechnen" Click="ButtonCalculate_Click" Grid.Row="1" Margin="30 15" />
+            <CheckBox Name="CheckboxAusgabe" Content="Dialogfenster" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button Name="ButtonCalculate" Content="Berechnen" Click="ButtonCalculate_Click" Grid.Row="2" Margin="30 10" />
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>

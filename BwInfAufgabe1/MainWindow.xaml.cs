@@ -29,6 +29,7 @@ namespace BwInfAufgabe1
 
         private void ButtonCalculate_Click(object sender, RoutedEventArgs e)
         {
+            bool Dialogfenster = false;
             string EingabeString;
             string[] EingabeArray;
             int AnzahlFarben;
@@ -42,6 +43,10 @@ namespace BwInfAufgabe1
             int[,] Farbpaare;
             int[,] Blumenbeet = CreateBlumenbeet();
 
+            if (CheckboxAusgabe.IsChecked == true)
+            {
+                Dialogfenster = true;
+            }
             
             try
             {
@@ -70,7 +75,10 @@ namespace BwInfAufgabe1
                     FarbenZuViel--;
                 }
 
-                MessageBox.Show("Farben zu viel: " + FarbenZuViel.ToString());
+                if (Dialogfenster)
+                {
+                    MessageBox.Show("Farben zu viel: " + FarbenZuViel.ToString());
+                }
             }
             catch
             {
@@ -79,7 +87,7 @@ namespace BwInfAufgabe1
             }
 
             //Farbenarray mit Farben auffüllen, bis die Anzahl an erwünschten Farben erreicht ist
-            Ausgabe(Farbpaare, Farben, Blumenbeet);
+            Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
             if(GetFirstFreeIndex(Farben) != -1)
             {
                 DifferenzFarben = AnzahlFarben - GetFirstFreeIndex(Farben);
@@ -87,7 +95,12 @@ namespace BwInfAufgabe1
                 {
                     FillFarben(DifferenzFarben, Farben);
                 }
-                MessageBox.Show("Differenz Farben: " + DifferenzFarben.ToString());
+
+                if (Dialogfenster)
+                {
+                    MessageBox.Show("Differenz Farben: " + DifferenzFarben.ToString());
+
+                }
             }
 
             //Blumenbeet mit diesen Farben auffüllen
@@ -102,7 +115,7 @@ namespace BwInfAufgabe1
             //Blume, die in den meisten Farbpaaren enthalten ist, in die Mitte
             SetMiddelBlume(Farben, Blumenbeet);
 
-            Ausgabe(Farbpaare, Farben, Blumenbeet);
+            Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
         }
 
         private int[,] CreateBlumenbeet()
@@ -406,8 +419,12 @@ namespace BwInfAufgabe1
                     break;
             }
         }
-        private void Ausgabe(int[,] Array1, int[,] Array2, int[,] Blumenbeet)
+        private void Ausgabe(bool Ausgabe, int[,] Array1, int[,] Array2, int[,] Blumenbeet)
         {
+            if(Ausgabe == false)
+            {
+                return;
+            }
             //Diese Methode gibt alle Werte der beiden Arrays aus
             string Ausgabe1 = string.Empty;
             for(int i = 0; i< Array1.GetLength(0); i++)
