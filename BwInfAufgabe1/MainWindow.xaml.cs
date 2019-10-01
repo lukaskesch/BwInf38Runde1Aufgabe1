@@ -115,6 +115,8 @@ namespace BwInfAufgabe1
             //Blume, die in den meisten Farbpaaren enthalten ist, in die Mitte
             SetMiddelBlume(Farben, Blumenbeet);
 
+            
+
             Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
         }
 
@@ -522,6 +524,12 @@ namespace BwInfAufgabe1
             }
 
             SetBlumeInBlumenbeet(Blumenbeet, 4, MeistenPartnerFarbnummer);
+        }
+        private void SetPartnersOfMiddleBlume(int[,] Farben, int[,] Blumenbeet)
+        {
+            //Alle Parner von Middle Blume 
+            //Je mehr Parner diese haben, desto besseren Platz
+            //Wenn gleichstand, dann der der mehr Punkte hat
         }
     }
 }
