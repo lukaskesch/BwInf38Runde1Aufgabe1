@@ -113,9 +113,12 @@ namespace BwInfAufgabe1
             }
 
             //Blume, die in den meisten Farbpaaren enthalten ist, in die Mitte
-            SetMiddelBlume(Farben, Blumenbeet);
+            int MiddleBlume = SetMiddelBlume(Farben, Blumenbeet);
 
-            
+            //Pflanze Partner der Mittelblume
+            SetPartnersOfMiddleBlume(Farben, Farbpaare, Blumenbeet, MiddleBlume);
+
+
 
             Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
         }
@@ -496,7 +499,7 @@ namespace BwInfAufgabe1
             Blumenbeet[Platz, 0] = Blume;
             SetBlumeToFarbe(Platz, Blume);
         }
-        private void SetMiddelBlume(int[,] Farben, int[,] Blumenbeet)
+        private int SetMiddelBlume(int[,] Farben, int[,] Blumenbeet)
         {
             int MeistenPartner = 0;
             int MeistenPartnerFarbnummer = -1;
@@ -524,12 +527,58 @@ namespace BwInfAufgabe1
             }
 
             SetBlumeInBlumenbeet(Blumenbeet, 4, MeistenPartnerFarbnummer);
+
+            return MeistenPartnerFarbnummer;
         }
-        private void SetPartnersOfMiddleBlume(int[,] Farben, int[,] Blumenbeet)
+        private void SetPartnersOfMiddleBlume(int[,] Farben, int[,] Farbpaare,  int[,] Blumenbeet, int MiddleBlume)
         {
             //Alle Parner von Middle Blume 
             //Je mehr Parner diese haben, desto besseren Platz
             //Wenn gleichstand, dann der der mehr Punkte hat
+
+            int[,] Partners = FindPartnersOfMidddleBlume(Farbpaare, Farben, MiddleBlume);
+        }
+        private int[,] FindPartnersOfMidddleBlume(int[,] Farbpaare, int[,] Farben, int MiddleBlume)
+        {
+            //Findet die Partner der Mittleren Blume
+            int[,] Partner = new int[8,3];
+
+            for(int i = 0; i < Farbpaare.GetLength(0); i++)
+            {
+                if(Farbpaare[i,0] == MiddleBlume)
+                {
+                    int index = GetFirstFreeIndex(Partner);
+                    Partner[index, 0] = Farbpaare[i, 1];
+                    Partner[index, 1] = Farbpaare[i, 2];
+
+                    //Findet herraus, wie viele Partner, die wiederum haben
+                    for (int j = 0; j < Farben.GetLength(0); i++)
+                    {
+                        if (Farben[j, 0] == Farbpaare[i, 1])
+                        {
+                            Partner[index, 2] = Farben[i, 1];
+                        }
+                    }
+                }
+                if (Farbpaare[i, 1] == MiddleBlume)
+                {
+                    int index = GetFirstFreeIndex(Partner);
+                    Partner[index, 0] = Farbpaare[i, 0];
+                    Partner[index, 1] = Farbpaare[i, 2];
+
+                    //Findet herraus, wie viele Partner, die wiederum haben
+                    for (int j = 0; j < Farben.GetLength(0); i++)
+                    {
+                        if (Farben[j, 0] == Farbpaare[i, 0])
+                        {
+                            Partner[index, 2] = Farben[i, 1];
+                        }
+                    }
+                }
+            }
+
+            
+            return Partner;
         }
     }
 }
