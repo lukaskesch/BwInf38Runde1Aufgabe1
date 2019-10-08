@@ -35,7 +35,7 @@ namespace BwInfAufgabe1
             int AnzahlFarben;
             int DifferenzFarben;
             int[,] Farben = new int[7, 9];
-            for(int i = 0; i < 7; i++)
+            for (int i = 0; i < 7; i++)
             {
                 Farben[i, 1] = -1;
                 Farben[i, 2] = -1;
@@ -47,7 +47,7 @@ namespace BwInfAufgabe1
             {
                 Dialogfenster = true;
             }
-            
+
             try
             {
                 EingabeString = TextBoxInput.Text;
@@ -88,7 +88,7 @@ namespace BwInfAufgabe1
 
             //Farbenarray mit Farben auffüllen, bis die Anzahl an erwünschten Farben erreicht ist
             Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
-            if(GetFirstFreeIndex(Farben) != -1)
+            if (GetFirstFreeIndex(Farben) != -1)
             {
                 DifferenzFarben = AnzahlFarben - GetFirstFreeIndex(Farben);
                 if (DifferenzFarben > 0)
@@ -106,7 +106,7 @@ namespace BwInfAufgabe1
             //Blumenbeet mit diesen Farben auffüllen
             for (int i = 0; i < 7; i++)
             {
-                if(Farben[i, 1] == 0)
+                if (Farben[i, 1] == 0)
                 {
                     SetBlumeInBlumenbeet(Blumenbeet, GetLowestPointInBlumenbeet(Blumenbeet), Farben[i, 0]);
                 }
@@ -204,7 +204,7 @@ namespace BwInfAufgabe1
                 Farbpaare[i, 1] = BlumenNameToBlumenNummer(EingabeArrayRow[1]);
                 Farbpaare[i, 2] = int.Parse(EingabeArrayRow[2]);
             }
-            
+
             return Farbpaare;
         }
         private void GetAllFarbnummern(int[,] Farbpaare, int[,] FarbnummernUndHaeufigkeit)
@@ -224,7 +224,7 @@ namespace BwInfAufgabe1
                     FarbnummernUndHaeufigkeit[Index, 2] = Farbpaare[i, 2];
 
                     SetNachbarblumen(FarbnummernUndHaeufigkeit, Index, Farbpaare[i, 0], Farbpaare[i, 1]);
-                    
+
 
                 }
                 else
@@ -254,7 +254,7 @@ namespace BwInfAufgabe1
 
                 }
             }
-            
+
         }
         private int GetFarbeWithLowestPoints(int[,] Farben)
         {
@@ -281,9 +281,9 @@ namespace BwInfAufgabe1
             }
             return WenigstenPunkteIndex;
         }
-        private void SetNachbarblumen(int[,] Farben, int index,  int Farbe1, int Farbe2)
+        private void SetNachbarblumen(int[,] Farben, int index, int Farbe1, int Farbe2)
         {
-            if(Farben[index,0] != Farbe1)
+            if (Farben[index, 0] != Farbe1)
             {
                 Farben[index, GetFirstFreeIndexOfRow(Farben, index)] = Farbe1;
             }
@@ -297,7 +297,7 @@ namespace BwInfAufgabe1
             //Diese Metode überprügt ob das übergebene Element im Array ist
             for (int i = 0; i < Array.GetLength(0); i++)
             {
-                if (Array[i,0] == Element) { return i; }
+                if (Array[i, 0] == Element) { return i; }
             }
             return -1;
         }
@@ -306,7 +306,7 @@ namespace BwInfAufgabe1
             //Diese Methode gibt den ersten freien Index eines Arrays zurück
             for (int i = 0; i < Array.GetLength(0); i++)
             {
-                if (Array[i,0] == 0)
+                if (Array[i, 0] == 0)
                 {
                     return i;
                 }
@@ -315,9 +315,9 @@ namespace BwInfAufgabe1
         }
         private int GetFirstFreeIndexOfRow(int[,] Array, int Row)
         {
-            for(int i = 0; i < Array.GetLength(1); i++)
+            for (int i = 0; i < Array.GetLength(1); i++)
             {
-                if(Array[Row, i] == 0)
+                if (Array[Row, i] == 0)
                 {
                     return i;
                 }
@@ -426,15 +426,15 @@ namespace BwInfAufgabe1
         }
         private void Ausgabe(bool Ausgabe, int[,] Array1, int[,] Array2, int[,] Blumenbeet)
         {
-            if(Ausgabe == false)
+            if (Ausgabe == false)
             {
                 return;
             }
             //Diese Methode gibt alle Werte der beiden Arrays aus
             string Ausgabe1 = string.Empty;
-            for(int i = 0; i< Array1.GetLength(0); i++)
+            for (int i = 0; i < Array1.GetLength(0); i++)
             {
-                for(int j = 0; j < Array1.GetLength(1); j++)
+                for (int j = 0; j < Array1.GetLength(1); j++)
                 {
                     Ausgabe1 += Array1[i, j] + " ";
                 }
@@ -461,21 +461,23 @@ namespace BwInfAufgabe1
                 Ausgabe3 += "\n";
             }
 
+
+
             MessageBox.Show(Ausgabe1);
             MessageBox.Show(Ausgabe2);
             MessageBox.Show(Ausgabe3);
 
-            
+
         }
         private int GetLowestPointInBlumenbeet(int[,] Blumenbeet)
         {
             //Ermittelt die Anzahl an niedrigster Nachbarn an einem unbekannten Platz
             int LowestNeighbours = 6;
-            for(int i = 0; i < 9; i++)
+            for (int i = 0; i < 9; i++)
             {
-                if(Blumenbeet[i,0] == -1)
+                if (Blumenbeet[i, 0] == -1)
                 {
-                    if(Blumenbeet[i,1] < LowestNeighbours)
+                    if (Blumenbeet[i, 1] < LowestNeighbours)
                     {
                         LowestNeighbours = Blumenbeet[i, 1];
                     }
@@ -484,9 +486,9 @@ namespace BwInfAufgabe1
 
             //Ermittelt den dazugehörigen Platz und gibt diesen zurück
             int index = 0;
-            for(int i = 0; i < 9; i++)
+            for (int i = 0; i < 9; i++)
             {
-                if(Blumenbeet[i,1] == LowestNeighbours && Blumenbeet[i,0] == -1)
+                if (Blumenbeet[i, 1] == LowestNeighbours && Blumenbeet[i, 0] == -1)
                 {
                     return index;
                 }
@@ -506,9 +508,9 @@ namespace BwInfAufgabe1
             int MeistenPartnerIndex = 0;
 
             //Ermittelt die Farbe mit den meisten Farbkombinationen
-            for(int i = 0; i < 7; i++)
+            for (int i = 0; i < 7; i++)
             {
-                if(MeistenPartner < Farben[i, 1])
+                if (MeistenPartner < Farben[i, 1])
                 {
                     MeistenPartner = Farben[i, 1];
                     MeistenPartnerFarbnummer = Farben[i, 0];
@@ -530,33 +532,49 @@ namespace BwInfAufgabe1
 
             return MeistenPartnerFarbnummer;
         }
-        private void SetPartnersOfMiddleBlume(int[,] Farben, int[,] Farbpaare,  int[,] Blumenbeet, int MiddleBlume)
+        private void SetPartnersOfMiddleBlume(int[,] Farben, int[,] Farbpaare, int[,] Blumenbeet, int MiddleBlume)
         {
-            //Alle Parner von Middle Blume 
             //Je mehr Parner diese haben, desto besseren Platz
             //Wenn gleichstand, dann der der mehr Punkte hat
 
+            //Alle Parner von Middle Blume 
             int[,] Partners = FindPartnersOfMidddleBlume(Farbpaare, Farben, MiddleBlume);
+
+            //Sortiere Array (Je mehr Parner diese haben, desto besseren Platz, wenn gleichstand, dann der der mehr Punkte hat)
+            SortArray(ref Partners, 2, 1);
+
+            string Ausgabe4 = string.Empty;
+            for (int i = 0; i < Partners.GetLength(0); i++)
+            {
+                for (int j = 0; j < Partners.GetLength(1); j++)
+                {
+                    Ausgabe4 += Partners[i, j] + " ";
+                }
+                Ausgabe4 += "\n";
+            }
+            MessageBox.Show("x\n" + Ausgabe4);
+
         }
         private int[,] FindPartnersOfMidddleBlume(int[,] Farbpaare, int[,] Farben, int MiddleBlume)
         {
             //Findet die Partner der Mittleren Blume
-            int[,] Partner = new int[8,3];
+            int[,] Partner = new int[8, 3];
 
-            for(int i = 0; i < Farbpaare.GetLength(0); i++)
+            for (int i = 0; i < Farbpaare.GetLength(0); i++)
             {
-                if(Farbpaare[i,0] == MiddleBlume)
+                if (Farbpaare[i, 0] == MiddleBlume)
                 {
                     int index = GetFirstFreeIndex(Partner);
                     Partner[index, 0] = Farbpaare[i, 1];
                     Partner[index, 1] = Farbpaare[i, 2];
 
                     //Findet herraus, wie viele Partner, die wiederum haben
-                    for (int j = 0; j < Farben.GetLength(0); i++)
+                    for (int j = 0; j < Farben.GetLength(0); j++)
                     {
                         if (Farben[j, 0] == Farbpaare[i, 1])
                         {
-                            Partner[index, 2] = Farben[i, 1];
+                            Partner[index, 2] = Farben[j, 1];
+                            break;
                         }
                     }
                 }
@@ -567,18 +585,70 @@ namespace BwInfAufgabe1
                     Partner[index, 1] = Farbpaare[i, 2];
 
                     //Findet herraus, wie viele Partner, die wiederum haben
-                    for (int j = 0; j < Farben.GetLength(0); i++)
+                    for (int j = 0; j < Farben.GetLength(0); j++)
                     {
                         if (Farben[j, 0] == Farbpaare[i, 0])
                         {
-                            Partner[index, 2] = Farben[i, 1];
+                            Partner[index, 2] = Farben[j, 1];
+                            break;
                         }
                     }
                 }
             }
 
-            
+
             return Partner;
+        }
+        private void SortArray(ref int[,] Array, int Column, int SecondColumn)
+        {
+            int Zwischenwert1, Zwischenwert2, Zwischenwert3;
+
+            // traverse 0 to array length 
+            for (int i = 0; i < 8 - 1; i++)
+            {
+                // traverse i+1 to array length 
+                for (int j = i + 1; j < 8; j++)
+                {
+                    // compare array element with  
+                    // all next element 
+                    if (Array[i, Column] < Array[j, Column])
+                    {
+                        Zwischenwert1 = Array[i, 0];
+                        Array[i, 0] = Array[j, 0];
+                        Array[j, 0] = Zwischenwert1;
+
+                        Zwischenwert2 = Array[i, 1];
+                        Array[i, 1] = Array[j, 1];
+                        Array[j, 1] = Zwischenwert2;
+
+                        Zwischenwert3 = Array[i, 2];
+                        Array[i, 2] = Array[j, 2];
+                        Array[j, 2] = Zwischenwert3;
+                    }
+
+                    if (Array[i, Column] == Array[j, Column])
+                    {
+                        if (Array[i, SecondColumn] < Array[j, SecondColumn])
+                        {
+                            Zwischenwert1 = Array[i, 0];
+                            Array[i, 0] = Array[j, 0];
+                            Array[j, 0] = Zwischenwert1;
+
+                            Zwischenwert2 = Array[i, 1];
+                            Array[i, 1] = Array[j, 1];
+                            Array[j, 1] = Zwischenwert2;
+
+                            Zwischenwert3 = Array[i, 2];
+                            Array[i, 2] = Array[j, 2];
+                            Array[j, 2] = Zwischenwert3;
+                        }
+                    }
+                }
+            }
+
+
+
+
         }
     }
 }
