@@ -196,7 +196,7 @@ namespace BwInfAufgabe1
         {
             //Diese Methode liefert ein Array aus mit allen Farbpaaren die angegeben wurden, mit ihrer Punktzahl
             int lengh = int.Parse(EingabeArray[1]);
-            int[,] Farbpaare = new int[lengh, 3];
+            int[,] Farbpaare = new int[lengh, 4];
             for (int i = 0; i < lengh; i++)
             {
                 string[] EingabeArrayRow = EingabeArray[i + 2].Split(' ');
@@ -534,9 +534,6 @@ namespace BwInfAufgabe1
         }
         private void SetPartnersOfMiddleBlume(int[,] Farben, int[,] Farbpaare, int[,] Blumenbeet, int MiddleBlume)
         {
-            //Je mehr Parner diese haben, desto besseren Platz
-            //Wenn gleichstand, dann der der mehr Punkte hat
-
             //Alle Parner von Middle Blume 
             int[,] Partners = FindPartnersOfMidddleBlume(Farbpaare, Farben, MiddleBlume);
 
@@ -554,11 +551,68 @@ namespace BwInfAufgabe1
             }
             MessageBox.Show("x\n" + Ausgabe4);
 
+            //Setze erste Blume
+            SetBlumeInBlumenbeet(Blumenbeet, 7, Partners[0, 0]);
+
+            //Vermerke, dass diese Blume (und Farbpaar gesetzt wurde)
+            Partners[0, 3] = 1;
+            MarkThatBlumenPaarIsUsed(Farbpaare, Partners[0, 0], Blumenbeet[4, 1], false, -1);
+
+            //Setze zweite Blume, wenn vorhanden (Wenn diese keinen weiteren Partner hat, dann auf schlechtesten Index)
+            if (GetFirstFreeIndex(Partners) > 1)
+            {
+                //Schaue, ob zweite Blume einen Partner hat
+                if (Partners[1, 2] > 1)
+                {
+                    //Schaue, ob zweiter Partner, mit erstem Partner einen Gemeinsamen Partner haben
+                    int Partner = CheckIfTwoFarbenHaveAnOtherPartnerTogether(Farben, Partners[0, 0], Partners[1, 0], Blumenbeet[4, 1]);
+                    if (Partner > 0)
+                    {
+                        //Setze zweite Blume
+                        SetBlumeInBlumenbeet(Blumenbeet, 6, Partners[1, 0]);
+
+                        //Vermerke, dass diese Blume (und Farbpaar gesetzt wurde)
+                        Partners[1, 3] = 1;
+                        MarkThatBlumenPaarIsUsed(Farbpaare, Partners[1, 0], Blumenbeet[4, 1], false, -1);
+
+                        //Setze die Partner Blume von Blume 1 und Blume2
+                        SetBlumeInBlumenbeet(Blumenbeet, 8, Partner);
+
+                        //Vermerke, dass das Farbpaar von Blume1 - Partner und Blume2 - Partner gesetzt wurde
+                        MarkThatBlumenPaarIsUsed(Farbpaare, Partners[1, 0], Partner, true, Partners[0, 0]);
+
+                    }
+                    else
+                    {
+                        //Setze zweite Blume
+                        SetBlumeInBlumenbeet(Blumenbeet, 1, Partners[1, 0]);
+
+                        //Vermerke, dass diese Blume (und Farbpaar gesetzt wurde)
+                        Partners[1, 3] = 1;
+                        MarkThatBlumenPaarIsUsed(Farbpaare, Partners[1, 0], Blumenbeet[4, 1], false, -1);
+                    }
+                }
+                else
+                {
+                    //Setze zweite Blume auf schlechtesten Index
+                    int Index = GetWorstNeighborIndex(Blumenbeet, 4);
+                    SetBlumeInBlumenbeet(Blumenbeet, Index, Partners[1, 0]);
+                    MessageBox.Show("" + Index);
+
+                }
+            }
+
+
+
+            //Regel: Wenn schon alle Farbpaare verbraucht, dann restliche Indizes mit glichem Nachbaaranzahl mit der Farbe des Index, der am meisten Punkte gibt, auffüllen
+
+
+
         }
         private int[,] FindPartnersOfMidddleBlume(int[,] Farbpaare, int[,] Farben, int MiddleBlume)
         {
             //Findet die Partner der Mittleren Blume
-            int[,] Partner = new int[8, 3];
+            int[,] Partner = new int[8, 4];
 
             for (int i = 0; i < Farbpaare.GetLength(0); i++)
             {
@@ -649,6 +703,92 @@ namespace BwInfAufgabe1
 
 
 
+        }
+        private bool IsBlumenbeetIndexFree(int[,] Blumenbeet, int index)
+        {
+            if (Blumenbeet[index, 0] == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private void MarkThatBlumenPaarIsUsed(int[,] Farbpaare, int Blume1, int Blume2, bool DreiFachpaar, int Blume3)
+        {
+            for (int i = 0; i < Farbpaare.GetLength(0); i++)
+            {
+                if ((Farbpaare[i, 0] == Blume1 && Farbpaare[i, 1] == Blume2) || (Farbpaare[i, 1] == Blume1 && Farbpaare[i, 0] == Blume2))
+                {
+                    Farbpaare[i, 3] = 1;
+                }
+                if (DreiFachpaar)
+                {
+                    if ((Farbpaare[i, 0] == Blume2 && Farbpaare[i, 1] == Blume3) || (Farbpaare[i, 1] == Blume2 && Farbpaare[i, 0] == Blume3))
+                    {
+                        Farbpaare[i, 3] = 1;
+                    }
+                }
+
+
+            }
+        }
+
+        private int CheckIfTwoFarbenHaveAnOtherPartnerTogether(int[,] Farben, int Farbe1, int Farbe2, int Partner)
+        {
+            //Ermittle die Indizes der Beiden Farben, im Array
+            int IndexFarbe1 = -1, IndexFarbe2 = -1, IndexPartner = -1;
+            for (int i = 0; i < Farben.GetLength(0); i++)
+            {
+                if (Farbe1 == Farben[i, 0])
+                {
+                    IndexFarbe1 = i;
+                }
+                else if (Farbe2 == Farben[i, 0])
+                {
+                    IndexFarbe2 = i;
+                }
+                else if (Partner == Farben[i, 0])
+                {
+                    IndexPartner = i;
+                }
+            }
+
+            //Überprüfe, ob diese einen gemeinsamen Partner haben
+            for (int i = 3; i < 9; i++)
+            {
+                for (int j = 3; j < 9; j++)
+                {
+                    if (Farben[IndexFarbe1, i] == Farben[IndexFarbe2, j] && Farben[IndexFarbe2, j] != Farben[IndexPartner, 0] && Farben[IndexFarbe2, j] != 0)
+                    {
+                        return Farben[IndexFarbe1, i];
+                    }
+                }
+            }
+
+            //Wenn nicht, wird -1 zurückgegeben
+            return -1;
+
+        }
+
+        private int GetWorstNeighborIndex(int[,] Blumenbeet, int StartIndex)
+        {
+            int TempIndex;
+            int Index = -1;
+            int NeighboorsOfIndex = 10;
+
+            for (int i = 2; i < 8; i++)
+            {
+                TempIndex = Blumenbeet[StartIndex, i];
+                if (Blumenbeet[TempIndex, 0] == -1 && Blumenbeet[TempIndex, 1] < NeighboorsOfIndex)
+                {
+                    Index = TempIndex;
+                    NeighboorsOfIndex = Blumenbeet[TempIndex, 1];
+                }
+            }
+
+            return Index;
         }
     }
 }
