@@ -29,6 +29,7 @@ namespace BwInfAufgabe1
 
         private void ButtonCalculate_Click(object sender, RoutedEventArgs e)
         {
+            ClearVisualBlumenbeet();
             bool Dialogfenster = false;
             string EingabeString;
             string[] EingabeArray;
@@ -115,14 +116,31 @@ namespace BwInfAufgabe1
             //Blume, die in den meisten Farbpaaren enthalten ist, in die Mitte
             int MiddleBlume = SetMiddelBlume(Farben, Blumenbeet);
 
-            //Pflanze Partner der Mittelblume
+            //Setze Partner der Mittelblume
             SetPartnersOfMiddleBlume(Farben, Farbpaare, Blumenbeet, MiddleBlume);
+
+            //Setze die restlichen Farbpaare
+            SetRestOfFarbpaare(Blumenbeet, Farbpaare);
+
+
+            //Regel: Wenn schon alle Farbpaare verbraucht, dann restliche Indizes mit glichem Nachbaaranzahl mit der Farbe des Index, der am meisten Punkte gibt, auffüllen
 
 
 
             Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
         }
-
+        private void ClearVisualBlumenbeet()
+        {
+            TabPanel1.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            TabPanel2.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            TabPanel3.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            TabPanel4.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            TabPanel5.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            TabPanel6.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            TabPanel7.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            TabPanel8.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            TabPanel9.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+        }
         private int[,] CreateBlumenbeet()
         {
             //Array für das Blumenbeet
@@ -597,17 +615,24 @@ namespace BwInfAufgabe1
                     //Setze zweite Blume auf schlechtesten Index
                     int Index = GetWorstNeighborIndex(Blumenbeet, 4);
                     SetBlumeInBlumenbeet(Blumenbeet, Index, Partners[1, 0]);
-                    MessageBox.Show("" + Index);
 
+                    //Vermerke, dass diese Blume (und Farbpaar gesetzt wurde)
+                    Partners[1, 3] = 1;
+                    MarkThatBlumenPaarIsUsed(Farbpaare, Partners[1, 0], Blumenbeet[4, 1], false, -1);
                 }
             }
 
+            //Setze dritte Blume, wenn vorhanden, auf den schlechtesten noch freien Index
+            if (GetFirstFreeIndex(Partners) > 2)
+            {
+                //Setze dritte Blume auf schlechtesten Index
+                int Index = GetWorstNeighborIndex(Blumenbeet, 4);
+                SetBlumeInBlumenbeet(Blumenbeet, Index, Partners[2, 0]);
 
-
-            //Regel: Wenn schon alle Farbpaare verbraucht, dann restliche Indizes mit glichem Nachbaaranzahl mit der Farbe des Index, der am meisten Punkte gibt, auffüllen
-
-
-
+                //Vermerke, dass diese Blume (und Farbpaar gesetzt wurde)
+                Partners[2, 3] = 1;
+                MarkThatBlumenPaarIsUsed(Farbpaare, Partners[2, 0], Blumenbeet[4, 1], false, -1);
+            }
         }
         private int[,] FindPartnersOfMidddleBlume(int[,] Farbpaare, int[,] Farben, int MiddleBlume)
         {
@@ -734,7 +759,6 @@ namespace BwInfAufgabe1
 
             }
         }
-
         private int CheckIfTwoFarbenHaveAnOtherPartnerTogether(int[,] Farben, int Farbe1, int Farbe2, int Partner)
         {
             //Ermittle die Indizes der Beiden Farben, im Array
@@ -771,7 +795,6 @@ namespace BwInfAufgabe1
             return -1;
 
         }
-
         private int GetWorstNeighborIndex(int[,] Blumenbeet, int StartIndex)
         {
             int TempIndex;
@@ -783,12 +806,158 @@ namespace BwInfAufgabe1
                 TempIndex = Blumenbeet[StartIndex, i];
                 if (Blumenbeet[TempIndex, 0] == -1 && Blumenbeet[TempIndex, 1] < NeighboorsOfIndex)
                 {
+                    if (TempIndex == 0 && i > 3)
+                    {
+                        return Index;
+                    }
                     Index = TempIndex;
                     NeighboorsOfIndex = Blumenbeet[TempIndex, 1];
                 }
             }
 
             return Index;
+        }
+        private void SetRestOfFarbpaare(int[,] Blumenbeet, int[,] Farbpaare)
+        {
+            //Gehe alle Farbpaare durch
+            for (int i = 0; i < Farbpaare.GetLength(0); i++)
+            {
+                //Schaue, ob ein Farbpaar noch nicht belegt ist
+                if (Farbpaare[i, 3] != 1)
+                {
+                    int Farbe1 = Farbpaare[i, 0];
+                    int Farbe2 = Farbpaare[i, 1];
+                    int FarbeSetzen;
+                    int Index;
+
+                    //Gehe das Blumenbeet durch
+                    for (int j = 0; j < Blumenbeet.GetLength(0); j++)
+                    {
+                        //Schaue, ob eine der Farben im Farbpaar schon im Blumenbeet vorhanden ist
+                        if (Blumenbeet[j, 0] == Farbe1)
+                        {
+                            FarbeSetzen = Farbe2;
+                        }
+                        else if (Blumenbeet[j, 0] == Farbe2)
+                        {
+                            FarbeSetzen = Farbe1;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+
+                        //Schaue, ob schon alle Farbpaare gesetzt wurden
+                        if (CheckIfAllFarbpaareAreSet(Farbpaare))
+                        {
+                            return;
+                        }
+
+                        //Ermittle den Index für die zweite (nicht gesetzte) Blume im Farbpaar
+                        Index = GetWorstNeighborIndex(Blumenbeet, j);
+
+                        //MessageBox.Show("i: " + i + "\nj: " + j + "\n" + Index);
+
+                        //Setze erste Blume
+                        SetBlumeInBlumenbeet(Blumenbeet, Index, FarbeSetzen);
+
+                        //Vermerke, dass diese Blume (und Farbpaar gesetzt wurde)
+                        MarkThatBlumenPaarIsUsed(Farbpaare, Farbe1, Farbe2, false, -1);
+
+                        //string Ausgabe1 = string.Empty;
+                        //for (int a = 0; a < Farbpaare.GetLength(0); a++)
+                        //{
+                        //    for (int b = 0; b < Farbpaare.GetLength(1); b++)
+                        //    {
+                        //        Ausgabe1 += Farbpaare[a, b] + " ";
+                        //    }
+                        //    Ausgabe1 += "\n";
+                        //}
+                        //MessageBox.Show(Ausgabe1);
+
+                        //Wenn noch nicht alle Farbpaare geseetzt sind, wird diese Methode neu gestartet
+                        if (!CheckIfAllFarbpaareAreSet(Farbpaare))
+                        {
+                            SetRestOfFarbpaare(Blumenbeet, Farbpaare);
+                        }
+                    }
+                }
+            }
+        }
+        private bool CheckIfAllFarbpaareAreSet(int[,] Farbpaare)
+        {
+            for (int i = 0; i < Farbpaare.GetLength(0); i++)
+            {
+                if (Farbpaare[i, 3] != 1)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        private void FillEmptyIndizies(int[,] Blumenbeet, int[,] Farbpaare)
+        {
+            //Gehe durch das BLumenbeet
+            for (int i = 0; i < Blumenbeet.GetLength(0); i++)
+            {
+                //Schaut, ob Platz noch nicht belegt
+                if (Blumenbeet[i, 0] == -1)
+                {
+                    //Holt sich die Nachbarplätze
+                    int[] Neighbors = GetNeighborBlumenOfIndex(Blumenbeet, i);
+                    int[,] NeighborsFarben = new int[4, 2];
+
+                    //Ermittelt für jeden dieser Nachbarplätze die beste Farbe
+                    for (int j = 0; j < 4; j++)
+                    {
+                        GetBestFlower(Blumenbeet, Farbpaare, NeighborsFarben, Neighbors[i], i);
+                    }
+
+                    //Ermittle insgesammt beste Blume
+                    //(Schaue, ob Farben doppelt vorkommen, und wen ja, dann deren Gesamtpunktzahl addieren, sonst
+                    //Farbe mit dem höchsten Wert nehmen
+                }
+            }
+        }
+        private int[] GetNeighborBlumenOfIndex(int[,] Blumenbeet, int Index)
+        {
+            int[] Neighbors = new int[4];
+            for (int i = 0; i < 4; i++)
+            {
+                Neighbors[i] = Blumenbeet[Index, i + 2];
+            }
+            return Neighbors;
+        }
+        private void GetBestFlower(int[,] Blumenbeet, int[,] Farbpaare, int[,] NeighborsFarben, int Index, int Index2)
+        {
+            //Ermittle Farbe zu dem entsprechenden Index
+            int Farbe = Blumenbeet[Index, 0];
+            int PartnerFarbe = -1;
+            int PartnerFarbePunkte = -1;
+
+            //Ermittle für diese Farbe, den besten Partner
+            for (int i = 0; i < Farbpaare.GetLength(0); i++)
+            {
+                if (Farbpaare[i, 0] == Farbe)
+                {
+                    if (Farbpaare[i, 2] > PartnerFarbePunkte)
+                    {
+                        PartnerFarbe = Farbpaare[i, 1];
+                        PartnerFarbePunkte = Farbpaare[i, 2];
+                    }
+                }
+                if (Farbpaare[i, 1] == Farbe)
+                {
+                    if (Farbpaare[i, 2] > PartnerFarbePunkte)
+                    {
+                        PartnerFarbe = Farbpaare[i, 0];
+                        PartnerFarbePunkte = Farbpaare[i, 2];
+                    }
+                }
+            }
+
+            NeighborsFarben[Index2, 0] = PartnerFarbe;
+            NeighborsFarben[Index2, 1] = PartnerFarbePunkte;
         }
     }
 }
