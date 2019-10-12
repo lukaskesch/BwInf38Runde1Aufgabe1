@@ -131,7 +131,7 @@ namespace BwInfAufgabe1
 
             Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
 
-            //FillEmptyIndizies(Blumenbeet, Farbpaare);
+            FillEmptyIndizies(Blumenbeet, Farbpaare);
 
             Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
 
@@ -947,15 +947,26 @@ namespace BwInfAufgabe1
         }
         private int[] GetHigherNeighborBlumenOfIndex(int[,] Blumenbeet, int Index)
         {
-            int[] Neighbors = new int[6];
+            int[] Neighbors = new int[3];
+            int index = 0;
             for (int i = 0; i < 6; i++)
             {
-                if (Blumenbeet[Index, i + 2] < Index)
+                if (Blumenbeet[Index, i + 2] <= Index)
                 {
                     continue;
                 }
-                Neighbors[i] = Blumenbeet[Index, i + 2];
+                Neighbors[index] = Blumenbeet[Index, i + 2];
+                index++;
+
             }
+
+            string Ausgabe1 = Index.ToString() + "\n";
+            for (int a = 0; a < Neighbors.GetLength(0); a++)
+            {
+                Ausgabe1 += Neighbors[a] + "\n";
+            }
+            MessageBox.Show(Ausgabe1);
+
             return Neighbors;
         }
         private void GetBestNeighborFlower(int[,] Blumenbeet, int[,] Farbpaare, int[,] NeighborsFarben, int Index, int Index2)
@@ -1025,7 +1036,7 @@ namespace BwInfAufgabe1
         }
         private int CalculateResult(int[,] Blumenbeet, int[,] Farbpaare)
         {
-            int result = -1;
+            int result = 0;
 
             //Gehe durch das Blumenbeet
             for (int i = 0; i < Blumenbeet.GetLength(0); i++)
@@ -1035,9 +1046,9 @@ namespace BwInfAufgabe1
 
                 for (int j = 0; j < Neighbors.Length; j++)
                 {
-                    if (j > 1 && Neighbors[j] == 0)
+                    if (j > 0 && Neighbors[j] == 0)
                     {
-                        break;
+                        continue;
                     }
 
                     CheckIfTwoColorsAreAPair(Farbpaare, Blumenbeet[i, 0], Blumenbeet[Neighbors[j], 0], ref result);
@@ -1049,7 +1060,7 @@ namespace BwInfAufgabe1
         {
             for (int i = 0; i < Farbpaare.GetLength(0); i++)
             {
-                if (Farbpaare[i, 0] == Blume1 && Farbpaare[i, 1] == Blume2 || Farbpaare[i, 0] == Blume2 && Farbpaare[i, 1] == Blume1)
+                if ((Farbpaare[i, 0] == Blume1 && Farbpaare[i, 1] == Blume2) || (Farbpaare[i, 0] == Blume2 && Farbpaare[i, 1] == Blume1))
                 {
                     result += Farbpaare[i, 2];
                 }

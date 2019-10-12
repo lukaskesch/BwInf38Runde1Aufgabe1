@@ -36,3 +36,7 @@ blau rosa 2
 gelb orange 1
 gruen orange 1
 blau tuerkis 2
+
+2
+1
+tuerkis rot 3
