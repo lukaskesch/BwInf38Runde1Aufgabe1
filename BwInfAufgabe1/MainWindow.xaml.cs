@@ -125,7 +125,8 @@ namespace BwInfAufgabe1
 
             //Regel: Wenn schon alle Farbpaare verbraucht, dann restliche Indizes mit glichem Nachbaaranzahl mit der Farbe des Index, der am meisten Punkte gibt, auffüllen
 
-
+            FillEmptyIndizies(Blumenbeet, Farbpaare);
+            FillEmptyIndizies(Blumenbeet, Farbpaare);
 
             Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
         }
@@ -516,6 +517,10 @@ namespace BwInfAufgabe1
         }
         private void SetBlumeInBlumenbeet(int[,] Blumenbeet, int Platz, int Blume)
         {
+            if (Blume > 0)
+            {
+                return;
+            }
             Blumenbeet[Platz, 0] = Blume;
             SetBlumeToFarbe(Platz, Blume);
         }
@@ -910,12 +915,17 @@ namespace BwInfAufgabe1
                     //Ermittelt für jeden dieser Nachbarplätze die beste Farbe
                     for (int j = 0; j < 4; j++)
                     {
-                        GetBestFlower(Blumenbeet, Farbpaare, NeighborsFarben, Neighbors[i], i);
+                        GetBestNeighborFlower(Blumenbeet, Farbpaare, NeighborsFarben, Neighbors[j], j);
                     }
 
+                    //Schaue, ob zwei Farben doppelt vorkommen
+                    CheckIfTwoColorsAreIdentical(ref NeighborsFarben, Blumenbeet);
+
                     //Ermittle insgesammt beste Blume
-                    //(Schaue, ob Farben doppelt vorkommen, und wen ja, dann deren Gesamtpunktzahl addieren, sonst
-                    //Farbe mit dem höchsten Wert nehmen
+                    int Blume = GetBestFlower(NeighborsFarben);
+
+                    //Setze diese Blume
+                    SetBlumeInBlumenbeet(Blumenbeet, i, Blume);
                 }
             }
         }
@@ -928,7 +938,7 @@ namespace BwInfAufgabe1
             }
             return Neighbors;
         }
-        private void GetBestFlower(int[,] Blumenbeet, int[,] Farbpaare, int[,] NeighborsFarben, int Index, int Index2)
+        private void GetBestNeighborFlower(int[,] Blumenbeet, int[,] Farbpaare, int[,] NeighborsFarben, int Index, int Index2)
         {
             //Ermittle Farbe zu dem entsprechenden Index
             int Farbe = Blumenbeet[Index, 0];
@@ -956,8 +966,42 @@ namespace BwInfAufgabe1
                 }
             }
 
+            if (PartnerFarbe == -1)
+            {
+                return;
+            }
             NeighborsFarben[Index2, 0] = PartnerFarbe;
             NeighborsFarben[Index2, 1] = PartnerFarbePunkte;
+        }
+        private void CheckIfTwoColorsAreIdentical(ref int[,] Array, int[,] Blumenbeet)
+        {
+            for (int i = 0; i < Array.GetLength(0); i++)
+            {
+                for (int j = 0; j < Array.GetLength(0); j++)
+                {
+                    if (Array[i, 0] == Array[j, 0]) //&& Array[j, 0] != Blumenbeet[4, 0]
+                    {
+                        Array[i, 1] += Array[j, 1];
+                        Array[j, 1] = Array[i, 1];
+                    }
+                }
+            }
+        }
+        private int GetBestFlower(int[,] Farbliste)
+        {
+            int Blume = -1;
+            int BlumenWert = -1;
+
+            for (int i = 0; i < Farbliste.GetLength(0); i++)
+            {
+                if (Farbliste[i, 1] > BlumenWert)
+                {
+                    BlumenWert = Farbliste[i, 1];
+                    Blume = Farbliste[i, 0];
+                }
+            }
+
+            return Blume;
         }
     }
 }
