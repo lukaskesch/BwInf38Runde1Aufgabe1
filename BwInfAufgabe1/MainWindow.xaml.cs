@@ -119,16 +119,23 @@ namespace BwInfAufgabe1
             //Setze Partner der Mittelblume
             SetPartnersOfMiddleBlume(Farben, Farbpaare, Blumenbeet, MiddleBlume);
 
+            Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
+
             //Setze die restlichen Farbpaare
             SetRestOfFarbpaare(Blumenbeet, Farbpaare);
 
+            Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
 
-            //Regel: Wenn schon alle Farbpaare verbraucht, dann restliche Indizes mit glichem Nachbaaranzahl mit der Farbe des Index, der am meisten Punkte gibt, auffüllen
-
-            FillEmptyIndizies(Blumenbeet, Farbpaare);
+            //Fülle leere Blumenplätze auf
             FillEmptyIndizies(Blumenbeet, Farbpaare);
 
             Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
+
+            //FillEmptyIndizies(Blumenbeet, Farbpaare);
+
+            Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
+
+            MessageBox.Show("Das erstellt Blumenbeet hat eine Gesammtpunktzahl von: " + CalculateResult(Blumenbeet, Farbpaare));
         }
         private void ClearVisualBlumenbeet()
         {
@@ -517,7 +524,7 @@ namespace BwInfAufgabe1
         }
         private void SetBlumeInBlumenbeet(int[,] Blumenbeet, int Platz, int Blume)
         {
-            if (Blume > 0)
+            if (Blume == 0)
             {
                 return;
             }
@@ -906,7 +913,7 @@ namespace BwInfAufgabe1
             for (int i = 0; i < Blumenbeet.GetLength(0); i++)
             {
                 //Schaut, ob Platz noch nicht belegt
-                if (Blumenbeet[i, 0] == -1)
+                if (Blumenbeet[i, 0] < 1)
                 {
                     //Holt sich die Nachbarplätze
                     int[] Neighbors = GetNeighborBlumenOfIndex(Blumenbeet, i);
@@ -934,6 +941,19 @@ namespace BwInfAufgabe1
             int[] Neighbors = new int[4];
             for (int i = 0; i < 4; i++)
             {
+                Neighbors[i] = Blumenbeet[Index, i + 2];
+            }
+            return Neighbors;
+        }
+        private int[] GetHigherNeighborBlumenOfIndex(int[,] Blumenbeet, int Index)
+        {
+            int[] Neighbors = new int[6];
+            for (int i = 0; i < 6; i++)
+            {
+                if (Blumenbeet[Index, i + 2] < Index)
+                {
+                    continue;
+                }
                 Neighbors[i] = Blumenbeet[Index, i + 2];
             }
             return Neighbors;
@@ -1002,6 +1022,38 @@ namespace BwInfAufgabe1
             }
 
             return Blume;
+        }
+        private int CalculateResult(int[,] Blumenbeet, int[,] Farbpaare)
+        {
+            int result = -1;
+
+            //Gehe durch das Blumenbeet
+            for (int i = 0; i < Blumenbeet.GetLength(0); i++)
+            {
+                //Holt sich die Nachbarn jeder einzelnen Blume
+                int[] Neighbors = GetHigherNeighborBlumenOfIndex(Blumenbeet, i);
+
+                for (int j = 0; j < Neighbors.Length; j++)
+                {
+                    if (j > 1 && Neighbors[j] == 0)
+                    {
+                        break;
+                    }
+
+                    CheckIfTwoColorsAreAPair(Farbpaare, Blumenbeet[i, 0], Blumenbeet[Neighbors[j], 0], ref result);
+                }
+            }
+            return result;
+        }
+        private void CheckIfTwoColorsAreAPair(int[,] Farbpaare, int Blume1, int Blume2, ref int result)
+        {
+            for (int i = 0; i < Farbpaare.GetLength(0); i++)
+            {
+                if (Farbpaare[i, 0] == Blume1 && Farbpaare[i, 1] == Blume2 || Farbpaare[i, 0] == Blume2 && Farbpaare[i, 1] == Blume1)
+                {
+                    result += Farbpaare[i, 2];
+                }
+            }
         }
     }
 }
