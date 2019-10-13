@@ -64,22 +64,24 @@ namespace BwInfAufgabe1
                 //Ausnahme, es wurden mehr Farben in Farbpaaren angegeben als Farben insgesammt erwünscht
                 int FarbenZuViel = GetFirstFreeIndex(Farben) - int.Parse(EingabeArray[0]);
 
-                while (FarbenZuViel > 0)
-                {
-                    //Ermittle Farbe die am wertlosesten ist
-                    int index = GetFarbeWithLowestPoints(Farben);
-                    MessageBox.Show(index.ToString());
-
-                    //Lösche alle Farbpaare mit ihr
-
-
-                    FarbenZuViel--;
-                }
-
                 if (Dialogfenster)
                 {
                     MessageBox.Show("Farben zu viel: " + FarbenZuViel.ToString());
                 }
+
+                while (FarbenZuViel > 0)
+                {
+                    //Ermittle Farbe die am wertlosesten ist
+                    int indexFarbe = GetFarbeWithLowestPoints(Farben);
+                    MessageBox.Show(indexFarbe.ToString());
+
+                    //Lösche alle Farbpaare mit ihr
+                    DeleteFarbpaare(Farbpaare, Farben[indexFarbe, 0]);
+
+                    FarbenZuViel--;
+                }
+
+
             }
             catch
             {
@@ -100,7 +102,6 @@ namespace BwInfAufgabe1
                 if (Dialogfenster)
                 {
                     MessageBox.Show("Differenz Farben: " + DifferenzFarben.ToString());
-
                 }
             }
 
@@ -233,6 +234,47 @@ namespace BwInfAufgabe1
 
             return Farbpaare;
         }
+        private void DeleteFarbpaare(int[,] Farbpaare, int Farbe)
+        {
+            for (int i = 0; i < Farbpaare.GetLength(0); i++)
+            {
+                if (Farbpaare[i, 0] == Farbe || Farbpaare[i, 1] == Farbe)
+                {
+                    for (int j = i; j < Farbpaare.GetLength(0) - i + 1; j++)
+                    {
+                        if (j < Farbpaare.GetLength(0) - 1)
+                        {
+                            Farbpaare[j, 0] = Farbpaare[j + 1, 0];
+                            Farbpaare[j, 1] = Farbpaare[j + 1, 0];
+                            Farbpaare[j, 2] = Farbpaare[j + 1, 0];
+                        }
+
+
+                        else
+                        {
+                            Farbpaare[Farbpaare.GetLength(0) - 1, 0] = 0;
+                            Farbpaare[Farbpaare.GetLength(0) - 1, 1] = 0;
+                            Farbpaare[Farbpaare.GetLength(0) - 1, 2] = 0;
+                        }
+                        try
+                        {
+                            if (Farbpaare[j + 2, 0] == 0)
+                            {
+                                Farbpaare[j + 1, 0] = 0;
+                                Farbpaare[j + 1, 1] = 0;
+                                Farbpaare[j + 1, 2] = 0;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            break;
+                        }
+
+                        //Schaue doppelten platz und setze diesen 0
+                    }
+                }
+            }
+        }
         private void GetAllFarbnummern(int[,] Farbpaare, int[,] FarbnummernUndHaeufigkeit)
         {
             //Diese Methode nimmt alle Farbpaare entgegen und ermittelt alle genutzen Farben und gibt diese in einem Array aus
@@ -290,7 +332,7 @@ namespace BwInfAufgabe1
             //Ermittelt die Farbe mit den wenigsten Farbkombinationen
             for (int i = 0; i < 7; i++)
             {
-                if (WenigstenPunkte > Farben[i, 2])
+                if (WenigstenPunkte > Farben[i, 2] && Farben[i, 2] > 0)
                 {
                     WenigstenPunkte = Farben[i, 2];
                     WenigstenPunkteIndex = i;
