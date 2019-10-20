@@ -114,29 +114,69 @@ namespace BwInfAufgabe1
                 }
             }
 
-            //Blume, die in den meisten Farbpaaren enthalten ist, in die Mitte
-            int MiddleBlume = SetMiddelBlume(Farben, Blumenbeet);
+            ////Blume, die in den meisten Farbpaaren enthalten ist, in die Mitte
+            //int MiddleBlume = SetMiddelBlume(Farben, Blumenbeet);
 
-            //Setze Partner der Mittelblume
-            SetPartnersOfMiddleBlume(Farben, Farbpaare, Blumenbeet, MiddleBlume);
+            ////Setze Partner der Mittelblume
+            //SetPartnersOfMiddleBlume(Farben, Farbpaare, Blumenbeet, MiddleBlume);
 
-            Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
+            //Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
 
-            //Setze die restlichen Farbpaare
-            SetRestOfFarbpaare(Blumenbeet, Farbpaare);
+            ////Setze die restlichen Farbpaare
+            //SetRestOfFarbpaare(Blumenbeet, Farbpaare);
 
-            Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
+            //Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
 
-            //Fülle leere Blumenplätze auf
-            FillEmptyIndizies(Blumenbeet, Farbpaare);
+            ////Fülle leere Blumenplätze auf
+            //FillEmptyIndizies(Blumenbeet, Farbpaare);
 
-            Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
+            //Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
 
-            FillEmptyIndizies(Blumenbeet, Farbpaare);
+            //FillEmptyIndizies(Blumenbeet, Farbpaare);
 
-            Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
+            //Ausgabe(Dialogfenster, Farbpaare, Farben, Blumenbeet);
+
+            FillBlumenbeet(Farben, Farbpaare, Blumenbeet, 8);
 
             MessageBox.Show("Das erstellt Blumenbeet hat eine Gesammtpunktzahl von: " + CalculateResult(Blumenbeet, Farbpaare));
+        }
+        private void FillBlumenbeet(int[,] Farben, int[,] Farbpaare, int[,] Blumenbeet, int Platz)
+        {
+            //System.Threading.Thread.Sleep(1000);
+            if (Platz >= 9 || Platz < 0)
+            {
+                //Check result
+
+
+                return;
+            }
+            else
+            {
+                //Gehe alle Farben durch für Platz
+                for (int i = 0; i < Farben.GetLength(0); i++)
+                {
+                    //Choose - Setze Blume auf übergebenen Platz
+                    SetBlumeInBlumenbeet(Blumenbeet, Platz, Farben[i, 0]);
+
+                    //Explore - Setze alle möglichen Blumen auf den nächsten Platz
+                    for (int j = 0; j < Farben.GetLength(0); j++)
+                    {
+                        FillBlumenbeet(Farben, Farbpaare, Blumenbeet, Platz + 1);
+                    }
+
+                    //Unchose - Gehe ein Blumenplatz zurueck
+                    //Platz -= 1;
+                }
+                //Gehe einen Platz zurück
+                if (Platz <= 0)
+                {
+                    return;
+                }
+                else
+                {
+                    FillBlumenbeet(Farben, Farbpaare, Blumenbeet, Platz - 1);
+                }
+            }
         }
         private void ClearVisualBlumenbeet()
         {
@@ -783,17 +823,7 @@ namespace BwInfAufgabe1
 
 
         }
-        private bool IsBlumenbeetIndexFree(int[,] Blumenbeet, int index)
-        {
-            if (Blumenbeet[index, 0] == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+
         private void MarkThatBlumenPaarIsUsed(int[,] Farbpaare, int Blume1, int Blume2, bool DreiFachpaar, int Blume3)
         {
             for (int i = 0; i < Farbpaare.GetLength(0); i++)
