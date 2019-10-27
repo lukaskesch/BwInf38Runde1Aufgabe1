@@ -18,7 +18,22 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <TextBox Name="TextBoxInput" Grid.Row="0" Margin="10 5" AcceptsReturn="True"/>
-            <CheckBox Name="CheckboxAusgabe" Content="Dialogfenster" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Grid Grid.Row="1" Margin="10 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Name="ButtonBeispiel1" Content="1" Grid.Column="0" Margin="3 11" Click="ButtonBeispiel1_Click"/>
+                <Button Name="ButtonBeispiel2" Content="2" Grid.Column="1" Margin="3 11" Click="ButtonBeispiel2_Click"/>
+                <Button Name="ButtonBeispiel3" Content="3" Grid.Column="2" Margin="3 11" Click="ButtonBeispiel3_Click"/>
+                <Button Name="ButtonBeispiel4" Content="4" Grid.Column="3" Margin="3 11" Click="ButtonBeispiel4_Click"/>
+                <Button Name="ButtonBeispiel5" Content="5" Grid.Column="4" Margin="3 11" Click="ButtonBeispiel5_Click"/>
+                <Button Name="ButtonBeispiel6" Content="6" Grid.Column="5" Margin="3 11" Click="ButtonBeispiel6_Click" />
+            </Grid>
             <Button Name="ButtonCalculate" Content="Berechnen" Click="ButtonCalculate_Click" Grid.Row="2" Margin="30 10" />
         </Grid>
         <Grid Grid.Column="1">

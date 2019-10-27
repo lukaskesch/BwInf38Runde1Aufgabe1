@@ -3,20 +3,36 @@
 rot blau 3
 rot tuerkis 2
 
+14
+
+---------------
+
 2
 2
 rot tuerkis 3
 gruen rot 1
+
+36
+
+---------------
 
 3
 2
 tuerkis rot 3
 rot gruen 1
 
+32
+
+--------------
+
 7
 2
 rot tuerkis 3
 gruen rot 1
+
+13
+
+----------------
 
 7
 6
@@ -26,6 +42,10 @@ rot rosa 3
 blau rosa 2
 gelb orange 1
 gruen orange 1
+
+22
+
+---------------
 
 7
 7
@@ -37,6 +57,9 @@ gelb orange 1
 gruen orange 1
 blau tuerkis 2
 
+22
+
+---------------
 2
 1
 tuerkis rot 3
