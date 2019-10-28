@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BwInfAufgabe1"
         mc:Ignorable="d"
-        Title="Aufgabe 1" Height="300" Width="350" WindowStartupLocation="CenterScreen">
+        Title="Aufgabe 1" Height="350" Width="350" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -14,6 +14,7 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="4*"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -34,9 +35,10 @@
                 <Button Name="ButtonBeispiel5" Content="5" Grid.Column="4" Margin="3 11" Click="ButtonBeispiel5_Click"/>
                 <Button Name="ButtonBeispiel6" Content="6" Grid.Column="5" Margin="3 11" Click="ButtonBeispiel6_Click" />
             </Grid>
-            <Button Name="ButtonCalculate" Content="Berechnen" Click="ButtonCalculate_Click" Grid.Row="2" Margin="30 10" />
+            <CheckBox Name="CheckboxRekursiv" Content="Rekursion" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button Name="ButtonCalculate" Content="Berechnen" Click="ButtonCalculate_Click" Grid.Row="3" Margin="30 10" />
         </Grid>
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Margin="0 25">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
