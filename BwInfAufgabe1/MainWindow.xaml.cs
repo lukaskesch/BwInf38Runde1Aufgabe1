@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace BwInfAufgabe1
 {
@@ -16,26 +19,29 @@ namespace BwInfAufgabe1
             InitializeComponent();
         }
         int[] BestBlumenbeet = new int[9];
+        int TemporaryResult;
         int BestResult;
         int[,] Farben;
         int[,] Farbpaare;
         int[] Blumenbeet;
         int[] Neighbors = new int[3];
-        int TemporaryResult;
         int Kontrolle;
+        int AnzahlFarbenGesetzt;
+        int AnzahlFarben;
+        Stopwatch timer = new Stopwatch();
         private void ButtonCalculate_Click(object sender, RoutedEventArgs e)
         {
             ClearVisualBlumenbeet();
             BestResult = 0;
             TemporaryResult = 0;
+            AnzahlFarbenGesetzt = 0;
             string EingabeString;
             string[] EingabeArray;
-            int AnzahlFarben;
             int DifferenzFarben;
             Blumenbeet = new int[9];
             int[,] FarbenVorlaeufig = new int[7, 4];
             int[,] FarbpaareVorlaeufig;
-            Stopwatch timer = new Stopwatch();
+            timer.Reset();
 
 
             try
@@ -79,17 +85,9 @@ namespace BwInfAufgabe1
                 //Arrays final sortieren
                 FinalSort(FarbenVorlaeufig, FarbpaareVorlaeufig);
 
+                //Errechne das beste Blumenbeet
                 timer.Start();
-
-                if (CheckboxRekursiv.IsChecked == true)
-                {
-                    FillBlumenbeet1(0, false);
-                }
-                else
-                {
-                    FillBlumenbeet2();
-                }
-
+                FillBlumenbeet1(0);
                 timer.Stop();
 
                 //Das beste Blumenbeet anzeigen
@@ -98,7 +96,7 @@ namespace BwInfAufgabe1
                     SetBlumeToFarbe(i, BestBlumenbeet[i]);
                 }
                 MessageBox.Show("Das erstellt Blumenbeet hat eine Gesammtpunktzahl von " + BestResult + " welche innerhalb von " + timer.Elapsed.TotalSeconds + " Sekunden berechnet wurde");
-                TextBoxInput.Text += "\n\nErgebnis: " + BestResult;
+                //TextBoxInput.Text += "\n\nErgebnis: " + BestResult;
 
             }
             catch
@@ -110,7 +108,7 @@ namespace BwInfAufgabe1
         }
 
         //Blumenbeet füllen
-        private void FillBlumenbeet1(int Platz, bool reset)
+        private void FillBlumenbeet1(int Platz)
         {
             if (Platz > 8 || Platz < 0)
             {
@@ -122,150 +120,32 @@ namespace BwInfAufgabe1
                 //Gehe alle Farben durch für Platz
                 for (int i = 0; i < Farben.GetLength(0); i++)
                 {
-                    if (reset)
-                    {
-                        reset = false;
-                        i = GetIndexOfElementInArray(Farben, Blumenbeet[Platz]) + 1;
-
-                        if (i >= Farben.GetLength(0))
-                        {
-                            return;
-                        }
-                    }
-                    //MessageBox.Show(Platz.ToString());
-                    //MessageBox.Show("FillBlumenbeet(Platz: " + Platz + " Farbe: " + i + ")");
-
                     //Choose - Setze Blume auf Platz
                     Blumenbeet[Platz] = Farben[i, 0];
+
+                    //Markiere Blume als benutzt
+                    if (Farben[i, 3] == 0)
+                    {
+                        AnzahlFarbenGesetzt++;
+                    }
+                    Farben[i, 3]++;
 
                     //Check result
                     if (CheckResult(Platz))
                     {
-                        //Explore - Setze alle möglichen Blumen auf den nächsten Platz
-                        for (short j = 0; j < Farben.GetLength(0); j++)
-                        {
-                            FillBlumenbeet1(Platz + 1, false);
-                        }
+                        FillBlumenbeet1(Platz + 1);
                     }
-                }
 
-                //Un-Choose - Ein Platz runter gehen und da weiter machen, wo man aufgehört hat
-                FillBlumenbeet1(Platz - 1, true);
-
-            }
-        }
-        private void FillBlumenbeet2()
-        {
-            int FarbenLaenge = Farben.GetLength(0);
-            int BlumenbeetLaenge = Blumenbeet.GetLength(0);
-
-            for (int b0 = 0; b0 < BlumenbeetLaenge; b0++)
-            {
-                for (int f0 = 0; f0 < FarbenLaenge; f0++)
-                {
-                    //Setze Blume
-                    Blumenbeet[b0] = Farben[f0, 0];
-
-                    if (CheckResult(b0))
+                    //Markiere Blume als nicht benutzt
+                    Farben[i, 3]--;
+                    if (Farben[i, 3] == 0)
                     {
-                        for (int b1 = b0 + 1; b1 < BlumenbeetLaenge; b1++)
-                        {
-                            for (int f1 = 0; f1 < FarbenLaenge; f1++)
-                            {
-                                //Setze Blume
-                                Blumenbeet[b1] = Farben[f1, 0];
-
-                                if (CheckResult(b1))
-                                {
-                                    for (int b2 = b1 + 1; b2 < BlumenbeetLaenge; b2++)
-                                    {
-                                        for (int f2 = 0; f2 < FarbenLaenge; f2++)
-                                        {
-                                            //Setze Blume
-                                            Blumenbeet[b2] = Farben[f2, 0];
-
-                                            if (CheckResult(b2))
-                                            {
-                                                for (int b3 = b2 + 1; b3 < BlumenbeetLaenge; b3++)
-                                                {
-                                                    for (int f3 = 0; f3 < FarbenLaenge; f3++)
-                                                    {
-                                                        //Setze Blume
-                                                        Blumenbeet[b3] = Farben[f3, 0];
-
-                                                        if (CheckResult(b3))
-                                                        {
-                                                            for (int b4 = b3 + 1; b4 < BlumenbeetLaenge; b4++)
-                                                            {
-                                                                for (int f4 = 0; f4 < FarbenLaenge; f4++)
-                                                                {
-                                                                    //Setze Blume
-                                                                    Blumenbeet[b4] = Farben[f4, 0];
-
-                                                                    if (CheckResult(b4))
-                                                                    {
-                                                                        for (int b5 = b4 + 1; b5 < BlumenbeetLaenge; b5++)
-                                                                        {
-                                                                            for (int f5 = 0; f5 < FarbenLaenge; f5++)
-                                                                            {
-                                                                                //Setze Blume
-                                                                                Blumenbeet[b5] = Farben[f5, 0];
-
-                                                                                if (CheckResult(b5))
-                                                                                {
-                                                                                    for (int b6 = b5 + 1; b6 < BlumenbeetLaenge; b6++)
-                                                                                    {
-                                                                                        for (int f6 = 0; f6 < FarbenLaenge; f6++)
-                                                                                        {
-                                                                                            //Setze Blume
-                                                                                            Blumenbeet[b6] = Farben[f6, 0];
-
-                                                                                            if (CheckResult(b6))
-                                                                                            {
-                                                                                                for (int b7 = b6 + 1; b7 < BlumenbeetLaenge; b7++)
-                                                                                                {
-                                                                                                    for (int f7 = 0; f7 < FarbenLaenge; f7++)
-                                                                                                    {
-                                                                                                        //Setze Blume
-                                                                                                        Blumenbeet[b7] = Farben[f7, 0];
-
-                                                                                                        if (CheckResult(b7))
-                                                                                                        {
-                                                                                                            for (int b8 = b7 + 1; b8 < BlumenbeetLaenge; b8++)
-                                                                                                            {
-                                                                                                                for (int f8 = 0; f8 < FarbenLaenge; f8++)
-                                                                                                                {
-                                                                                                                    //Setze Blume
-                                                                                                                    Blumenbeet[b8] = Farben[f8, 0];
-
-                                                                                                                    CheckResult(b8);
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        AnzahlFarbenGesetzt--;
                     }
                 }
             }
         }
+
 
         //Deklerationen
         private void ClearVisualBlumenbeet()
@@ -643,92 +523,73 @@ namespace BwInfAufgabe1
         {
             TemporaryResult = 0;
 
-            //Gehe durch das Blumenbeet und errechne für jede Blume, die Punkte mit ihren Nachbarblumen
-            for (short i = 0; i < Blumenbeet.GetLength(0); i++)
-            {
-                //Schaue, ob das Blumenbeet an dieser Stelle noch nicht besetzt ist
-                if (Blumenbeet[i] == 0)
-                {
-                    return true;
-                }
-
-                //Markiere Farbe als benutzt
-                for (short j = 0; j < Farben.GetLength(0); j++)
-                {
-                    if (Farben[j, 0] == Blumenbeet[i])
-                    {
-                        Farben[j, 3]++;
-                    }
-                }
-
-                //Holt sich die Nachbarn jeder einzelnen Blume
-                Neighbors = GetHigherNeighborBlumenOfIndex(i);
-
-                //Überprüfe, welche Nachbarn ein Blumenpaar sind
-                for (short j = 0; j < Neighbors.Length; j++)
-                {
-                    if (j > 0 && Neighbors[j] == 0 || i == Blumenbeet.GetLength(0) - 1)
-                    {
-                        break;
-                    }
-
-                    CheckIfTwoColorsAreAPair(Farbpaare, Blumenbeet[i], Blumenbeet[Neighbors[j]], ref TemporaryResult);
-                }
-            }
-
-
-            //Schau nach, ob alle Farbpaare gesetz sind
-            Kontrolle = 0;
-            for (short i = 0; i < Farbpaare.GetLength(0); i++)
-            {
-                if (Farbpaare[i, 3] == 0)
-                {
-                    TemporaryResult = int.MinValue;
-                    Kontrolle++;
-                }
-                Farbpaare[i, 3] = 0;
-            }
-            //Wenn nicht, wird überprüft, ob das weitere Vorgehen abgebrochen werden soll
-            if (Kontrolle > (8 - Platz) * 2)
+            if (AnzahlFarben - AnzahlFarbenGesetzt > 8 - Platz)
             {
                 return false;
             }
-
-            //Schaue nach, ob alle Farben gesetzt wurden
-            Kontrolle = 0;
-            for (short i = 0; i < Farben.GetLength(0); i++)
+            else
             {
-                if (Farben[i, 3] == 0)
+                //Gehe durch das Blumenbeet und errechne für jede Blume, die Punkte mit ihren Nachbarblumen
+                for (short i = 0; i < Blumenbeet.GetLength(0); i++)
+                {
+                    //Schaue, ob das Blumenbeet an dieser Stelle noch nicht besetzt ist
+                    if (Blumenbeet[i] == 0)
+                    {
+                        return true;
+                    }
+
+                    //Holt sich die Nachbarn jeder einzelnen Blume
+                    Neighbors = GetHigherNeighborBlumenOfIndex(i);
+
+                    //Überprüfe, welche Nachbarn ein Blumenpaar sind
+                    for (short j = 0; j < Neighbors.Length; j++)
+                    {
+                        if (j > 0 && Neighbors[j] == 0 || i == Blumenbeet.GetLength(0) - 1)
+                        {
+                            break;
+                        }
+
+                        CheckIfTwoColorsAreAPair(Farbpaare, Blumenbeet[i], Blumenbeet[Neighbors[j]], ref TemporaryResult);
+                    }
+                }
+
+                //Schau nach, ob alle Farbpaare gesetz sind
+                Kontrolle = 0;
+                for (short i = 0; i < Farbpaare.GetLength(0); i++)
+                {
+                    if (Farbpaare[i, 3] == 0)
+                    {
+                        TemporaryResult = int.MinValue;
+                        Kontrolle++;
+                    }
+                    Farbpaare[i, 3] = 0;
+                }
+                //Wenn nicht, wird überprüft, ob das weitere Vorgehen abgebrochen werden soll
+                if (Kontrolle > (8 - Platz) * 2)
+                {
+                    return false;
+                }
+
+                //Schaue nach, ob alle Farben gesetzt wurden
+                if (AnzahlFarben > AnzahlFarbenGesetzt)
                 {
                     TemporaryResult = int.MinValue;
-                    Kontrolle++;
                 }
-                if (Farben[i, 2] == 0 && Farben[i, 3] > 1)
+
+                //Schaue nach, ob das Zwischenergebnis, immer noch das beste ist
+                if (TemporaryResult > BestResult)
                 {
-                    TemporaryResult = int.MinValue;
+                    BestResult = TemporaryResult;
+
+                    for (int i = 0; i < BestBlumenbeet.Length; i++)
+                    {
+                        BestBlumenbeet[i] = Blumenbeet[i];
+                    }
                 }
-                Farben[i, 3] = 0;
-            }
-            //Wenn nicht, wird überprüft, ob das weitere Vorgehen abgebrochen werden soll
-            if (Kontrolle > (8 - Platz))
-            {
-                return false;
-            }
 
-            //Schaue nach, ob das Zwischenergebnis, immer noch das beste ist
-            if (TemporaryResult > BestResult)
-            {
-                BestResult = TemporaryResult;
-
-                for (int i = 0; i < BestBlumenbeet.Length; i++)
-                {
-                    BestBlumenbeet[i] = Blumenbeet[i];
-                }
+                return true;
             }
-
-            return true;
         }
-
         private void CheckIfTwoColorsAreAPair(int[,] Farbpaare, int Blume1, int Blume2, ref int result)
         {
             for (short i = 0; i < Farbpaare.GetLength(0); i++)
