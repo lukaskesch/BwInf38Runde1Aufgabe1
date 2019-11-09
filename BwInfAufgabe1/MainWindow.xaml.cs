@@ -28,10 +28,12 @@ namespace BwInfAufgabe1
         int Kontrolle;
         int AnzahlFarbenGesetzt;
         int AnzahlFarben;
+        int Durchlaeufe;
         Stopwatch timer = new Stopwatch();
         private void ButtonCalculate_Click(object sender, RoutedEventArgs e)
         {
             ClearVisualBlumenbeet();
+            Durchlaeufe = 0;
             BestResult = 0;
             TemporaryResult = 0;
             AnzahlFarbenGesetzt = 0;
@@ -95,26 +97,25 @@ namespace BwInfAufgabe1
                 {
                     SetBlumeToFarbe(i, BestBlumenbeet[i]);
                 }
-                MessageBox.Show("Das erstellt Blumenbeet hat eine Gesammtpunktzahl von " + BestResult + " welche innerhalb von " + timer.Elapsed.TotalSeconds + " Sekunden berechnet wurde");
-                //TextBoxInput.Text += "\n\nErgebnis: " + BestResult;
+                MessageBox.Show("Das erstellt Blumenbeet hat eine Gesammtpunktzahl von " + BestResult + " welche innerhalb von " + timer.Elapsed.TotalSeconds + " Sekunden, mit " + Durchlaeufe + " Durchläufen, berechnet wurde");
+                TextBoxInput.Text += "\n\nErgebnis: " + BestResult;
 
             }
             catch
             {
                 MessageBox.Show("Die Eingabeparameter konnten nicht entgegengenommen werden");
-                throw;
-                //return;
+                //throw;
+                return;
             }
         }
 
         //Blumenbeet füllen
         private void FillBlumenbeet1(int Platz)
         {
-            if (Platz > 8 || Platz < 0)
+            if (Platz > 8)
             {
                 return;
             }
-
             else
             {
                 //Gehe alle Farben durch für Platz
@@ -122,6 +123,8 @@ namespace BwInfAufgabe1
                 {
                     //Choose - Setze Blume auf Platz
                     Blumenbeet[Platz] = Farben[i, 0];
+                    Durchlaeufe++;
+
 
                     //Markiere Blume als benutzt
                     if (Farben[i, 3] == 0)
@@ -130,9 +133,10 @@ namespace BwInfAufgabe1
                     }
                     Farben[i, 3]++;
 
-                    //Check result
+                    //Überprüfe Ergebnis
                     if (CheckResult(Platz))
                     {
+                        //Rufe die Methode für den nächsten Platz auf
                         FillBlumenbeet1(Platz + 1);
                     }
 
@@ -523,6 +527,7 @@ namespace BwInfAufgabe1
         {
             TemporaryResult = 0;
 
+            //Schaut, ob bis zum jetztigen Platz genügend Farben gesetzt wurden
             if (AnzahlFarben - AnzahlFarbenGesetzt > 8 - Platz)
             {
                 return false;
