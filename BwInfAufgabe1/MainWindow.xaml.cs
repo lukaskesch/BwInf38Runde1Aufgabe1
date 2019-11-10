@@ -154,15 +154,15 @@ namespace BwInfAufgabe1
         //Deklerationen
         private void ClearVisualBlumenbeet()
         {
-            TabPanel1.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            TabPanel2.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            TabPanel3.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            TabPanel4.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            TabPanel5.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            TabPanel6.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            TabPanel7.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            TabPanel8.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            TabPanel9.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            TabPanel1.Background = new SolidColorBrush(Colors.White);
+            TabPanel2.Background = new SolidColorBrush(Colors.White);
+            TabPanel3.Background = new SolidColorBrush(Colors.White);
+            TabPanel4.Background = new SolidColorBrush(Colors.White);
+            TabPanel5.Background = new SolidColorBrush(Colors.White);
+            TabPanel6.Background = new SolidColorBrush(Colors.White);
+            TabPanel7.Background = new SolidColorBrush(Colors.White);
+            TabPanel8.Background = new SolidColorBrush(Colors.White);
+            TabPanel9.Background = new SolidColorBrush(Colors.White);
         }
         private int[,] GetAllFarbpaare(string[] EingabeArray)
         {
@@ -453,21 +453,21 @@ namespace BwInfAufgabe1
             switch (Blumennummer)
             {
                 case 1:
-                    return new SolidColorBrush(Color.FromRgb(0, 0, 255));
+                    return new SolidColorBrush(Colors.Blue);
                 case 2:
-                    return new SolidColorBrush(Color.FromRgb(255, 255, 0));
+                    return new SolidColorBrush(Colors.Yellow);
                 case 3:
-                    return new SolidColorBrush(Color.FromRgb(0, 255, 0));
+                    return new SolidColorBrush(Colors.Green);
                 case 4:
-                    return new SolidColorBrush(Color.FromRgb(255, 165, 0));
+                    return new SolidColorBrush(Colors.Orange);
                 case 5:
-                    return new SolidColorBrush(Color.FromRgb(255, 192, 203));
+                    return new SolidColorBrush(Colors.Pink);
                 case 6:
-                    return new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                    return new SolidColorBrush(Colors.Red);
                 case 7:
-                    return new SolidColorBrush(Color.FromRgb(63, 136, 143));
+                    return new SolidColorBrush(Colors.Turquoise);
                 default:
-                    return new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    return new SolidColorBrush(Colors.White);
 
             }
         }
