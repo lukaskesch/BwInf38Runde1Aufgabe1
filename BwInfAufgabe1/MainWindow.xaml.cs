@@ -89,7 +89,7 @@ namespace BwInfAufgabe1
 
                 //Errechne das beste Blumenbeet
                 timer.Start();
-                FillBlumenbeet1(0);
+                FillBlumenbeet(0);
                 timer.Stop();
 
                 //Das beste Blumenbeet anzeigen
@@ -110,7 +110,7 @@ namespace BwInfAufgabe1
         }
 
         //Blumenbeet füllen
-        private void FillBlumenbeet1(int Platz)
+        private void FillBlumenbeet(int Platz)
         {
             if (Platz > 8)
             {
@@ -137,7 +137,7 @@ namespace BwInfAufgabe1
                     if (CheckResult(Platz))
                     {
                         //Rufe die Methode für den nächsten Platz auf
-                        FillBlumenbeet1(Platz + 1);
+                        FillBlumenbeet(Platz + 1);
                     }
 
                     //Markiere Blume als nicht benutzt
@@ -558,30 +558,13 @@ namespace BwInfAufgabe1
                     }
                 }
 
-                //Schau nach, ob alle Farbpaare gesetz sind
-                Kontrolle = 0;
-                for (short i = 0; i < Farbpaare.GetLength(0); i++)
-                {
-                    if (Farbpaare[i, 3] == 0)
-                    {
-                        TemporaryResult = int.MinValue;
-                        Kontrolle++;
-                    }
-                    Farbpaare[i, 3] = 0;
-                }
-                //Wenn nicht, wird überprüft, ob das weitere Vorgehen abgebrochen werden soll
-                if (Kontrolle > (8 - Platz) * 2)
-                {
-                    return false;
-                }
-
                 //Schaue nach, ob alle Farben gesetzt wurden
                 if (AnzahlFarben > AnzahlFarbenGesetzt)
                 {
                     TemporaryResult = int.MinValue;
                 }
 
-                //Schaue nach, ob das Zwischenergebnis, immer noch das beste ist
+                //Schaue nach, ob das Zwischenergebnis immer noch das Beste ist
                 if (TemporaryResult > BestResult)
                 {
                     BestResult = TemporaryResult;
